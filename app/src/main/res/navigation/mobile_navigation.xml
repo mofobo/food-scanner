@@ -21,7 +21,7 @@
             app:destination="@id/cameraScannerFragment" />
     </fragment>
 
-    <fragment
+    <dialog
         android:id="@+id/cameraScannerFragment"
         android:name="ch.mofobo.foodscanner.features.scanner.camera.CameraScannerFragment"
         android:label="CameraScannerFragment" />
