@@ -8,12 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.domain.model.Product
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ScannerFragment : Fragment() {
+
+    private lateinit var navController: NavController
 
     private val scannerViewModel: ScannerViewModel by viewModel()
 
@@ -26,12 +30,18 @@ class ScannerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navController = view.findNavController()
+
         clear_btn.isEnabled = false
         search_btn.isEnabled = false
 
+        scan_btn.setOnClickListener {
+            navController.navigate(R.id.action_navigation_scanner_to_cameraScannerFragment)
+        }
+
         observeViewModel()
 
-        barcode_input.addTextChangedListener(
+        barcode_manual_input.addTextChangedListener(
             object : TextWatcher {
                 override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}

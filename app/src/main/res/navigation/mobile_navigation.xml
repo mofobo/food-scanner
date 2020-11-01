@@ -15,11 +15,21 @@
         android:id="@+id/navigation_scanner"
         android:name="ch.mofobo.foodscanner.features.scanner.ScannerFragment"
         android:label="@string/title_scanner"
-        tools:layout="@layout/fragment_scanner" />
+        tools:layout="@layout/fragment_scanner">
+        <action
+            android:id="@+id/action_navigation_scanner_to_cameraScannerFragment"
+            app:destination="@id/cameraScannerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraScannerFragment"
+        android:name="ch.mofobo.foodscanner.features.scanner.camera.CameraScannerFragment"
+        android:label="CameraScannerFragment" />
 
     <fragment
         android:id="@+id/navigation_history"
         android:name="ch.mofobo.foodscanner.features.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
+
 </navigation>
