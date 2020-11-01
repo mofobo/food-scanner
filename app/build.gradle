@@ -9,7 +9,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "ch.mofobo.masrad.mws.foodscanner"
+        applicationId "ch.mofobo.foodscanner"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
@@ -24,6 +24,64 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        def STRING = "String"
+        def BOOLEAN = "boolean"
+        def INT = "int"
+
+        def FOODREPO_BASE_URL = "FOODREPO_BASE_URL"
+        def FOODREPO_API_KEY = "FOODREPO_API_KEY"
+        def VERSION = defaultConfig.versionName
+
+        dev {
+            versionName "$VERSION"
+            applicationId "ch.mofobo.foodscanner.dev"
+
+            resValue "string", "flavored_app_name", "FoodScanner Dev"
+            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
+            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
+
+            dimension "default"
+        }
+
+        tes {
+            versionName "$VERSION"
+            applicationId "ch.mofobo.foodscanner.test"
+
+            resValue "string", "flavored_app_name", "FoodScanner Test"
+            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
+            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
+
+            dimension "default"
+        }
+
+        integ {
+            versionName "$VERSION"
+            applicationId "ch.mofobo.foodscanner.integ"
+
+            resValue "string", "flavored_app_name", "FoodScanner Int"
+            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
+            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
+
+            dimension "default"
+        }
+
+        prod {
+            versionName "$VERSION"
+            applicationId "ch.mofobo.foodscanner"
+
+            resValue "string", "flavored_app_name", "FoodScanner Dev"
+            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
+            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
+
+            dimension "default"
+        }
+
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
