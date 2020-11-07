@@ -30,6 +30,7 @@
     <dialog
         android:id="@+id/navigation_camera"
         android:name="ch.mofobo.foodscanner.features.scanner.camera.CameraFragment"
-        android:label="Camera" />
+        android:label="Camera"
+        tools:layout="@layout/fragment_camera" />
 
 </navigation>
