@@ -16,39 +16,25 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.scanner.camera.analyzer.BarcodeAnalyzer
 import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.android.synthetic.main.fragment_camera_scanner.*
+import kotlinx.android.synthetic.main.fragment_camera.*
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.Executors
 
-class CameraScannerFragment : DialogFragment() {
+class CameraFragment : DialogFragment() {
 
-    private lateinit var cameraScannerViewModel: CameraScannerViewModel
+    private val cameraViewModel: CameraViewModel by viewModel()
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private val cameraExecutor = Executors.newSingleThreadExecutor()
 
-
     // This is an array of all the permission specified in the manifest.
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        cameraScannerViewModel =
-            ViewModelProviders.of(this).get(CameraScannerViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_camera_scanner, container, false)
-        cameraScannerViewModel.text.observe(viewLifecycleOwner, Observer {
-
-            // seteDATA FROM ViewModel
-            //fighter_left.name.text = it
-        })
-        return root
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(LAYOUT_ID, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,6 +48,16 @@ class CameraScannerFragment : DialogFragment() {
             cameraProvider()
         }
 
+        oberveViewModel()
+
+    }
+
+    private fun oberveViewModel() {
+        cameraViewModel.text.observe(viewLifecycleOwner, Observer {
+
+            // seteDATA FROM ViewModel
+            //fighter_left.name.text = it
+        })
     }
 
     override fun onResume() {
@@ -118,7 +114,7 @@ class CameraScannerFragment : DialogFragment() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (requestCode == Companion.REQUEST_CODE_PERMISSIONS) {
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 cameraProvider()
             } else {
@@ -137,9 +133,12 @@ class CameraScannerFragment : DialogFragment() {
     }
 
     companion object {
+
+        private const val LAYOUT_ID = R.layout.fragment_camera
+
         // This is an arbitrary number we are using to keep track of the permission
-    // request. Where an app has multiple context for requesting permission,
-    // this can help differentiate the different contexts.
+        // request. Where an app has multiple context for requesting permission,
+        // this can help differentiate the different contexts.
         private const val REQUEST_CODE_PERMISSIONS = 10
     }
 

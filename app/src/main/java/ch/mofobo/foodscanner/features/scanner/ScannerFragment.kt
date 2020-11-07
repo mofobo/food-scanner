@@ -22,10 +22,8 @@ class ScannerFragment : Fragment() {
     private val scannerViewModel: ScannerViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_scanner, container, false)
-        return root
+        return inflater.inflate(LAYOUT_ID, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,7 +34,7 @@ class ScannerFragment : Fragment() {
         search_btn.isEnabled = false
 
         scan_btn.setOnClickListener {
-            navController.navigate(R.id.action_navigation_scanner_to_cameraScannerFragment)
+            navController.navigate(R.id.action_navigation_scanner_to_camera)
         }
 
         observeViewModel()
@@ -61,5 +59,10 @@ class ScannerFragment : Fragment() {
                 or_label.text = product.data.display_name_translations.fr
             }
         })
+    }
+
+
+    companion object {
+        private const val LAYOUT_ID = R.layout.fragment_scanner
     }
 }

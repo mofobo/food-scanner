@@ -17,19 +17,19 @@
         android:label="@string/title_scanner"
         tools:layout="@layout/fragment_scanner">
         <action
-            android:id="@+id/action_navigation_scanner_to_cameraScannerFragment"
-            app:destination="@id/cameraScannerFragment" />
+            android:id="@+id/action_navigation_scanner_to_camera"
+            app:destination="@id/navigation_camera" />
     </fragment>
-
-    <dialog
-        android:id="@+id/cameraScannerFragment"
-        android:name="ch.mofobo.foodscanner.features.scanner.camera.CameraScannerFragment"
-        android:label="CameraScannerFragment" />
 
     <fragment
         android:id="@+id/navigation_history"
         android:name="ch.mofobo.foodscanner.features.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
+
+    <dialog
+        android:id="@+id/navigation_camera"
+        android:name="ch.mofobo.foodscanner.features.scanner.camera.CameraFragment"
+        android:label="Camera" />
 
 </navigation>
