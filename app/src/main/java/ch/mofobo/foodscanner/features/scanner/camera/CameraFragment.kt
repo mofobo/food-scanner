@@ -3,7 +3,6 @@ package ch.mofobo.foodscanner.features.scanner.camera
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +15,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.scanner.camera.analyzer.BarcodeAnalyzer
 import com.google.common.util.concurrent.ListenableFuture
@@ -25,7 +26,9 @@ import java.util.concurrent.Executors
 
 class CameraFragment : DialogFragment() {
 
-    private val cameraViewModel: CameraViewModel by viewModel()
+    private lateinit var navController: NavController
+
+    private val viewModel: CameraViewModel by viewModel()
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private val cameraExecutor = Executors.newSingleThreadExecutor()
@@ -40,24 +43,10 @@ class CameraFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
-
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            cameraProvider()
-        }
-
+        navController = NavHostFragment.findNavController(this)
+        prepareView()
+        prepareCamera()
         oberveViewModel()
-
-    }
-
-    private fun oberveViewModel() {
-        cameraViewModel.text.observe(viewLifecycleOwner, Observer {
-
-            // seteDATA FROM ViewModel
-            //fighter_left.name.text = it
-        })
     }
 
     override fun onResume() {
@@ -73,6 +62,37 @@ class CameraFragment : DialogFragment() {
     override fun getTheme(): Int {
         return R.style.DialogTheme
     }
+
+    private fun navigateTo(destination: Int) {
+        navController.navigate(destination)
+    }
+
+    private fun prepareView() {
+        nav_to_search_btn.setOnClickListener { navigateTo(NAV_TO_SEARCH) }
+    }
+
+    private fun prepareCamera() {
+        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+
+        // Request camera permissions
+        if (allPermissionsGranted()) {
+            cameraProvider()
+        }
+    }
+
+    private fun oberveViewModel() {
+        viewModel.actions.observe(viewLifecycleOwner, Observer {
+            navigateTo(NAV_TO_SEARCH)
+        })
+
+
+        viewModel.text.observe(viewLifecycleOwner, Observer {
+
+            // seteDATA FROM ViewModel
+            //fighter_left.name.text = it
+        })
+    }
+
 
     private fun cameraProvider() {
         cameraProviderFuture.addListener(Runnable {
@@ -97,8 +117,7 @@ class CameraFragment : DialogFragment() {
             .also {
                 it.setAnalyzer(cameraExecutor, BarcodeAnalyzer { qrResult ->
                     previewView.post {
-                        Log.d("QRCodeAnalyzer", "Barcode scanned: ${qrResult.text}")
-                        // return wirh ressult
+                        viewModel.onBarcodeScanned(qrResult.text)
                     }
                 })
             }
@@ -135,6 +154,8 @@ class CameraFragment : DialogFragment() {
     companion object {
 
         private const val LAYOUT_ID = R.layout.fragment_camera
+
+        private const val NAV_TO_SEARCH = R.id.action_navigation_camera_to_search
 
         // This is an arbitrary number we are using to keep track of the permission
         // request. Where an app has multiple context for requesting permission,

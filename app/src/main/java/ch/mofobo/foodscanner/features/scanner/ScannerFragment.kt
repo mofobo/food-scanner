@@ -19,7 +19,7 @@ class ScannerFragment : Fragment() {
 
     private lateinit var navController: NavController
 
-    private val scannerViewModel: ScannerViewModel by viewModel()
+    private val viewModel: ScannerViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(LAYOUT_ID, container, false)
@@ -29,15 +29,22 @@ class ScannerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = view.findNavController()
+        prepareView()
+        observeViewModel()
+    }
 
+    private fun navigateTo(destination: Int) {
+        navController.navigate(destination)
+    }
+
+    private fun prepareView() {
         clear_btn.isEnabled = false
         search_btn.isEnabled = false
 
         scan_btn.setOnClickListener {
-            navController.navigate(R.id.action_navigation_scanner_to_camera)
+            navigateTo(NAV_TO_CAMERA)
         }
 
-        observeViewModel()
 
         barcode_manual_input.addTextChangedListener(
             object : TextWatcher {
@@ -53,7 +60,7 @@ class ScannerFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        scannerViewModel.products.observe(viewLifecycleOwner, Observer {
+        viewModel.products.observe(viewLifecycleOwner, Observer {
             val product: Product? = it.data
             if (product != null) {
                 or_label.text = product.data.display_name_translations.fr
@@ -61,8 +68,9 @@ class ScannerFragment : Fragment() {
         })
     }
 
-
     companion object {
         private const val LAYOUT_ID = R.layout.fragment_scanner
+
+        private const val NAV_TO_CAMERA = R.id.action_navigation_scanner_to_camera
     }
 }
