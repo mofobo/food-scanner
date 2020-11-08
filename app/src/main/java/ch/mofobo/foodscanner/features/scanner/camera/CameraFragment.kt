@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.scanner.camera.analyzer.BarcodeAnalyzer
@@ -63,12 +64,11 @@ class CameraFragment : DialogFragment() {
         return R.style.DialogTheme
     }
 
-    private fun navigateTo(destination: Int) {
+    private fun navigateTo(destination: NavDirections) {
         navController.navigate(destination)
     }
 
     private fun prepareView() {
-        nav_to_search_btn.setOnClickListener { navigateTo(NAV_TO_SEARCH) }
     }
 
     private fun prepareCamera() {
@@ -82,14 +82,13 @@ class CameraFragment : DialogFragment() {
 
     private fun oberveViewModel() {
         viewModel.actions.observe(viewLifecycleOwner, Observer {
-            navigateTo(NAV_TO_SEARCH)
+            it?.let {
+                navController.navigate(CameraFragmentDirections.actionNavigationToSearch(it))
+            }
         })
 
 
         viewModel.text.observe(viewLifecycleOwner, Observer {
-
-            // seteDATA FROM ViewModel
-            //fighter_left.name.text = it
         })
     }
 
@@ -154,8 +153,6 @@ class CameraFragment : DialogFragment() {
     companion object {
 
         private const val LAYOUT_ID = R.layout.fragment_camera
-
-        private const val NAV_TO_SEARCH = R.id.action_navigation_camera_to_search
 
         // This is an arbitrary number we are using to keep track of the permission
         // request. Where an app has multiple context for requesting permission,

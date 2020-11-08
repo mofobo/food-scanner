@@ -35,16 +35,21 @@
         android:id="@+id/navigation_camera"
         android:name="ch.mofobo.foodscanner.features.scanner.camera.CameraFragment"
         android:label="Camera"
-        tools:layout="@layout/fragment_camera" >
-        <action
-            android:id="@+id/action_navigation_camera_to_search"
-            app:destination="@id/navigation_search" />
-    </dialog>
+        tools:layout="@layout/fragment_camera" />
 
     <dialog
         android:id="@+id/navigation_search"
         android:name="ch.mofobo.foodscanner.features.common.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <argument
+            android:name="barcode"
+            app:argType="string" />
+    </dialog>
+
+
+    <action
+        android:id="@+id/action_navigation_to_search"
+        app:destination="@id/navigation_search" />
 
 </navigation>
