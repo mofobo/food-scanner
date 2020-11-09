@@ -1,7 +1,6 @@
 package ch.mofobo.foodscanner.domain.model
 
 data class Product(
-
     val id: Int,
     val country: String,
     val barcode: String,
@@ -19,4 +18,22 @@ data class Product(
     val nutrients: Nutrients,
     val created_at: String,
     val updated_at: String
-)
+) {
+    val isImageAvailable: Boolean
+        get() = images.any { it.isImageAvailable }
+
+    fun getImages(size: String): List<String> {
+        val imageList = mutableListOf<String>()
+        images.forEach {
+            val url = when (size) {
+                "thumb" -> it.thumb
+                "medium" -> it.medium
+                "large" -> it.large
+                "xlarge" -> it.xlarge
+                else -> return@forEach
+            }
+            imageList.add(url)
+        }
+        return imageList
+    }
+}

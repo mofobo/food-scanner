@@ -7,7 +7,12 @@ buildscript {
     ext.retrofit_version = '2.8.1'
     // navigation
     ext.nav_version = '2.3.1'
-
+    // lottie
+    ext.lottie_version = '3.3.1'
+    // Zxing
+    ext.zxing_version = '3.4.0'
+    // Picasso
+    ext.picasso_version = '2.71828'
 
     repositories {
         google()

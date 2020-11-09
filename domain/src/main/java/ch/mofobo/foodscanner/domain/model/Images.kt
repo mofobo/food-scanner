@@ -6,4 +6,12 @@ data class Images(
     val medium: String,
     val large: String,
     val xlarge: String
-)
+) {
+    val isImageAvailable: Boolean
+        get() = !(thumb.isNullOrBlank() &&
+                medium.isNullOrBlank() &&
+                large.isNullOrBlank() &&
+                xlarge.isNullOrBlank())
+
+
+}
