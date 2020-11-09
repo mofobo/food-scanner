@@ -31,6 +31,8 @@ class SearchFragment : DialogFragment() {
         navController = NavHostFragment.findNavController(this)
         prepareView()
         oberveViewModel()
+
+        viewModel.searchProduct(args.barcode)
     }
 
     private fun navigateTo(destination: Int) {
@@ -38,12 +40,14 @@ class SearchFragment : DialogFragment() {
     }
 
     private fun prepareView() {
-        text.text = args.barcode
+        productName.text = args.barcode
     }
 
     private fun oberveViewModel() {
-        viewModel.text.observe(viewLifecycleOwner, Observer {
-            // text.text = it
+        viewModel.product.observe(viewLifecycleOwner, Observer {
+            it?.data?.let {
+                productName.text = it.name_translations.french
+            }
         })
     }
 

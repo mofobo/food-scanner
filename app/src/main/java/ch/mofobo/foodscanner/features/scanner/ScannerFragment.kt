@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import ch.mofobo.foodscanner.R
-import ch.mofobo.foodscanner.domain.model.Product
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -60,12 +58,6 @@ class ScannerFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(viewLifecycleOwner, Observer {
-            val product: Product? = it.data
-            if (product != null) {
-                or_label.text = product.data.display_name_translations.fr
-            }
-        })
     }
 
     companion object {

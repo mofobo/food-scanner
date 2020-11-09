@@ -1,14 +1,15 @@
 package ch.mofobo.foodscanner.domain.model
 
-data class Nutrients (
+import com.squareup.moshi.Json
 
-	val energy : Energy,
-	val energy_kcal : Energy_kcal,
-	val fat : Fat,
-	val saturated_fat : Saturated_fat,
-	val carbohydrates : Carbohydrates,
-	val sugars : Sugars,
-	val fiber : Fiber,
-	val protein : Protein,
-	val salt : Salt
+data class Nutrients(
+    val salt: NutrientInfo?,
+    val protein: NutrientInfo?,
+    val fiber: NutrientInfo?,
+    val sugars: NutrientInfo?,
+    val carbohydrates: NutrientInfo?,
+    @field:Json(name = "saturated_fat") val saturatedFat: NutrientInfo?,
+    val fat: NutrientInfo?,
+    @field:Json(name = "energy_kcal") val energyKcal: NutrientInfo?,
+    val energy: NutrientInfo?
 )

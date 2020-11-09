@@ -83,7 +83,9 @@ class CameraFragment : DialogFragment() {
     private fun oberveViewModel() {
         viewModel.actions.observe(viewLifecycleOwner, Observer {
             it?.let {
-                navController.navigate(CameraFragmentDirections.actionNavigationToSearch(it))
+                when (it) {
+                    is CameraViewModel.Action.SearchBarcode -> navController.navigate(CameraFragmentDirections.actionNavigationToSearch(it.barcode))
+                }
             }
         })
 
@@ -116,7 +118,9 @@ class CameraFragment : DialogFragment() {
             .also {
                 it.setAnalyzer(cameraExecutor, BarcodeAnalyzer { qrResult ->
                     previewView.post {
-                        viewModel.onBarcodeScanned(qrResult.text)
+                        qrResult?.let { result ->
+                            viewModel.onBarcodeScanned(result.text)
+                        }
                     }
                 })
             }

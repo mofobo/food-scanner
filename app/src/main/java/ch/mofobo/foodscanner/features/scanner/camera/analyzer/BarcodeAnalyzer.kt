@@ -8,7 +8,7 @@ import com.google.zxing.*
 import com.google.zxing.common.HybridBinarizer
 import java.nio.ByteBuffer
 
-class BarcodeAnalyzer(private val onQrCodesDetected: (qrCode: Result) -> Unit) : ImageAnalysis.Analyzer {
+class BarcodeAnalyzer(private val onQrCodesDetected: (qrCode: Result?) -> Unit) : ImageAnalysis.Analyzer {
 
     private fun ByteBuffer.toByteArray(): ByteArray {
         rewind()
