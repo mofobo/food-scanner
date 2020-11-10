@@ -43,5 +43,5 @@ data class Nutrients(
     @field:Json(name = "vitamin_d_cholacalciferol") val vitaminDCholacalciferol: NutrientInfo?,
     @field:Json(name = "vitamin_e_tocopherol") val vitaminETocopherol: NutrientInfo?,
     @field:Json(name = "vitamin_k") val vitaminK: NutrientInfo?,
-    val zinco: NutrientInfo?    
+    val zinco: NutrientInfo?
 )

@@ -11,4 +11,13 @@ data class Translations(
     val italien: String?,
     @field:Json(name = "en")
     val englisch: String?
-)
+) {
+    fun getTranslation(lang: Lang, defaultValue: String): String {
+        return when (lang) {
+            Lang.ENGLISCH -> englisch
+            Lang.FRENCH -> french
+            Lang.GERMAN -> german
+            Lang.ITALIAN -> italien
+        } ?: defaultValue
+    }
+}

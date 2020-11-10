@@ -16,6 +16,9 @@ import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryLayoutMa
 import ch.mofobo.foodscanner.utils.recyclerview.RecyclerViewDividerMarginItemDecoration
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 class SearchFragment : DialogFragment() {
 
@@ -46,7 +49,6 @@ class SearchFragment : DialogFragment() {
 
     private fun prepareView() {
         prepareAdapter()
-        name_tv.text = args.barcode
         nutrients_table_webview.loadUrl("file:///android_asset/nutrients_template.html")
     }
 
@@ -72,15 +74,69 @@ class SearchFragment : DialogFragment() {
                 displayProduct(it)
             }
         })
+
+        viewModel.actions.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is SearchViewModel.Action.NutrientsTable -> nutrients_table_webview.loadData(it.html, "text/html", "UTF-8")
+            }
+        })
     }
 
     private fun displayProduct(product: Product) {
         product.let {
             product.let {
                 imageGalleryAdapter.setData(it.getImages("large"))
+                viewModel.retrieveNutrientsTable(it.nutrients, readeFileFromAssets("nutrients_template.html"))
+
             }
         }
         name_tv.text = product.name_translations.french
+    }
+
+
+    /*suspend private fun handleNutrientsTable(nutrients: Nutrients) {
+        var nutrientsHtmlTemplateStr = readeFileFromAssets("nutrients_template.html")
+        Log.d("FUCK", nutrientsHtmlTemplateStr)
+
+        val nutrientInfosHTML = mutableListOf<String>()
+        for (property in Nutrients::class.memberProperties) {
+            val nutrient = property.call(nutrients) as NutrientInfo?
+            nutrient?.let {
+                val name = nutrient.nameTranslations.getTranslation(Lang.FRENCH, property.name)
+                val qty = nutrient.getQty()
+                val nutriRec = "69%"
+                Log.d("FUCK", name)
+                Log.d("FUCK", qty)
+                val nutrientInfoHtml = String.format(NUTRIENT_MAIN_HTML_TEMPLATE, name, qty, nutriRec)
+                nutrientInfosHTML.add(nutrientInfoHtml)
+            }
+        }
+        nutrientsHtmlTemplateStr = nutrientsHtmlTemplateStr.replace("[NUTRIENTS_ITEMS]", nutrientInfosHTML.joinToString(separator = ""))
+        nutrients_table_webview.loadData(nutrientsHtmlTemplateStr, "text/html", "UTF-8")
+    }*/
+
+    private fun readeFileFromAssets(fileName: String): String {
+        var reader: BufferedReader? = null
+        var result = ""
+        try {
+            reader = BufferedReader(InputStreamReader(requireActivity().assets.open(fileName), "UTF-8"))
+
+            var line: String?
+            do {
+                line = reader.readLine()
+                result += line ?: ""
+            } while (line != null)
+
+        } catch (e: IOException) { /*log the exception*/
+        } finally {
+            reader?.let {
+                try {
+                    it.close()
+                } catch (e: IOException) { /* log the exception */
+                }
+            }
+        }
+        return result
     }
 
     override fun getTheme(): Int {
@@ -90,6 +146,7 @@ class SearchFragment : DialogFragment() {
     companion object {
 
         private const val LAYOUT_ID = R.layout.fragment_search
+
     }
 
 }

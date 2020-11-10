@@ -154,4 +154,7 @@ dependencies {
 
     // Cardview
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Rrflection
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.4.10'
 }
