@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DefaultItemAnimator
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryAdapter
@@ -47,21 +46,22 @@ class SearchFragment : DialogFragment() {
 
     private fun prepareView() {
         prepareAdapter()
-        name.text = args.barcode
+        name_tv.text = args.barcode
+        nutrients_table_webview.loadUrl("file:///android_asset/nutrients_template.html")
     }
 
     private fun prepareAdapter() {
-        imageGallery.layoutManager = ImageGalleryLayoutManager(context)
+        image_gallery_rv.layoutManager = ImageGalleryLayoutManager(context)
 
-        imageGallery.addItemDecoration(
+        image_gallery_rv.addItemDecoration(
             RecyclerViewDividerMarginItemDecoration(
                 resources.getDimension(R.dimen.image_gallery_item_margin).toInt()
             )
         )
 
         imageGalleryAdapter = ImageGalleryAdapter()
-        imageGallery.adapter = imageGalleryAdapter
-        imageGalleryAdapter.setData(listOf("","",""))
+        image_gallery_rv.adapter = imageGalleryAdapter
+        imageGalleryAdapter.setData(listOf("", "", ""))
 
     }
 
@@ -80,7 +80,7 @@ class SearchFragment : DialogFragment() {
                 imageGalleryAdapter.setData(it.getImages("large"))
             }
         }
-        name.text = product.name_translations.french
+        name_tv.text = product.name_translations.french
     }
 
     override fun getTheme(): Int {
