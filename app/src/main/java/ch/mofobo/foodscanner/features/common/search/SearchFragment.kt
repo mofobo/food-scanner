@@ -1,15 +1,22 @@
 package ch.mofobo.foodscanner.features.common.search
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import ch.mofobo.foodscanner.R
+import ch.mofobo.foodscanner.domain.model.Lang
+import ch.mofobo.foodscanner.domain.model.NutrientInfo
+import ch.mofobo.foodscanner.domain.model.Nutrients
 import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryAdapter
 import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryLayoutManager
@@ -19,6 +26,8 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import kotlin.reflect.full.memberProperties
+
 
 class SearchFragment : DialogFragment() {
 
@@ -49,7 +58,7 @@ class SearchFragment : DialogFragment() {
 
     private fun prepareView() {
         prepareAdapter()
-        nutrients_table_webview.loadUrl("file:///android_asset/nutrients_template.html")
+        //nutrients_table_webview.loadUrl("file:///android_asset/nutrients_template.html")
     }
 
     private fun prepareAdapter() {
@@ -74,46 +83,48 @@ class SearchFragment : DialogFragment() {
                 displayProduct(it)
             }
         })
-
-        viewModel.actions.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is SearchViewModel.Action.NutrientsTable -> nutrients_table_webview.loadData(it.html, "text/html", "UTF-8")
-            }
-        })
     }
 
     private fun displayProduct(product: Product) {
         product.let {
             product.let {
-                imageGalleryAdapter.setData(it.getImages("large"))
-                viewModel.retrieveNutrientsTable(it.nutrients, readeFileFromAssets("nutrients_template.html"))
 
+                name_tv.text = it.name_translations.getTranslation(Lang.FRENCH, it.barcode)
+
+                imageGalleryAdapter.setData(it.getImages("large"))
+
+                Handler().postDelayed({ displayNutrients(it) }, 10)
             }
         }
-        name_tv.text = product.name_translations.french
+
     }
 
-
-    /*suspend private fun handleNutrientsTable(nutrients: Nutrients) {
-        var nutrientsHtmlTemplateStr = readeFileFromAssets("nutrients_template.html")
-        Log.d("FUCK", nutrientsHtmlTemplateStr)
+    private fun displayNutrients(product: Product) {
+        var htmlTemplate = readeFileFromAssets("nutrients_template.html")
 
         val nutrientInfosHTML = mutableListOf<String>()
         for (property in Nutrients::class.memberProperties) {
-            val nutrient = property.call(nutrients) as NutrientInfo?
+            val nutrient = property.call(product.nutrients) as NutrientInfo?
             nutrient?.let {
                 val name = nutrient.nameTranslations.getTranslation(Lang.FRENCH, property.name)
                 val qty = nutrient.getQty()
                 val nutriRec = "69%"
-                Log.d("FUCK", name)
-                Log.d("FUCK", qty)
                 val nutrientInfoHtml = String.format(NUTRIENT_MAIN_HTML_TEMPLATE, name, qty, nutriRec)
                 nutrientInfosHTML.add(nutrientInfoHtml)
             }
         }
-        nutrientsHtmlTemplateStr = nutrientsHtmlTemplateStr.replace("[NUTRIENTS_ITEMS]", nutrientInfosHTML.joinToString(separator = ""))
-        nutrients_table_webview.loadData(nutrientsHtmlTemplateStr, "text/html", "UTF-8")
-    }*/
+        htmlTemplate = htmlTemplate.replace("[NUTRIENTS_ITEMS]", nutrientInfosHTML.joinToString(separator = ""))
+
+        val manager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val metrics = DisplayMetrics()
+        manager.defaultDisplay.getMetrics(metrics)
+        metrics.widthPixels /= metrics.density.toInt()
+        nutrients_table_webview.settings.javaScriptEnabled = true
+        htmlTemplate = htmlTemplate.replace("[WIDTH_PX]",  metrics.widthPixels.toString())
+
+        nutrients_table_webview.loadDataWithBaseURL("", htmlTemplate, "text/html", "UTF-8", "")
+
+    }
 
     private fun readeFileFromAssets(fileName: String): String {
         var reader: BufferedReader? = null
@@ -144,9 +155,10 @@ class SearchFragment : DialogFragment() {
     }
 
     companion object {
+        private const val NUTRIENT_MAIN_HTML_TEMPLATE = "<tr><th colspan=\"2\"><b>%1s</b>%2s</th><td><b>%3s</b></td></tr>"
+        private const val NUTRIENT_SUB_HTML_TEMPLATE = "<tr><td class=\"blank-cell\"></td><th>[NUTRIENT_NAME] [NUTRIENT_QTY]</th><td><b>[NUTRIENT_REC]</b></td></tr>"
 
         private const val LAYOUT_ID = R.layout.fragment_search
-
     }
 
 }
