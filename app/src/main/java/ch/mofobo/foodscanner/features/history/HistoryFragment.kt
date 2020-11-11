@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -45,6 +46,7 @@ class HistoryFragment : Fragment() {
     }
 
     companion object {
+        @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_history
     }
 }

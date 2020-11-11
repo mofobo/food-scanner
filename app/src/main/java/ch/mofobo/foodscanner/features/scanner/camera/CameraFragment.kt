@@ -2,12 +2,14 @@ package ch.mofobo.foodscanner.features.scanner.camera
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.LayoutRes
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -155,7 +157,7 @@ class CameraFragment : DialogFragment() {
     }
 
     companion object {
-
+        @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_camera
 
         // This is an arbitrary number we are using to keep track of the permission

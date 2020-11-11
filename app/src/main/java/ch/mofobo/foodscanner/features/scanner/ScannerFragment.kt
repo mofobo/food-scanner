@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -31,16 +32,17 @@ class ScannerFragment : Fragment() {
         observeViewModel()
     }
 
-    private fun navigateTo(destination: Int) {
-        navController.navigate(destination)
-    }
-
     private fun prepareView() {
         clear_btn.isEnabled = false
         search_btn.isEnabled = false
 
+        clear_btn.setOnClickListener { barcode_manual_input.text?.clear() }
+        search_btn.setOnClickListener {
+            navController.navigate(ScannerFragmentDirections.actionNavigationToSearch("7613312089040"))
+        }
+
         scan_btn.setOnClickListener {
-            navigateTo(NAV_TO_CAMERA)
+            navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
         }
 
 
@@ -61,8 +63,7 @@ class ScannerFragment : Fragment() {
     }
 
     companion object {
+        @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_scanner
-
-        private const val NAV_TO_CAMERA = R.id.action_navigation_scanner_to_camera
     }
 }

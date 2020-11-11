@@ -5,6 +5,8 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IntegerRes
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -96,8 +98,7 @@ class SearchFragment : DialogFragment() {
     }
 
     private fun displayNutrients(product: Product) {
-        var htmlTemplate = readeFileFromAssets("nutrients_template.html")
-
+        var htmlTemplate = requireContext().getString(R.string.nutrients_table_html)
         val nutrients = product.nutrients
         val nutrientInfosHTML = mutableListOf<String>()
         val vitaminsInfosHTML = mutableListOf<String>()
@@ -223,6 +224,7 @@ class SearchFragment : DialogFragment() {
 
         private val DEFAULT_LANG = Lang.ENGLISCH
 
+        @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_search
     }
 
