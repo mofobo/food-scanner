@@ -14,7 +14,6 @@ import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.common.StringUtils
 import ch.mofobo.foodscanner.domain.model.Lang
 import ch.mofobo.foodscanner.domain.model.NutrientInfo
-import ch.mofobo.foodscanner.domain.model.Nutrients
 import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryAdapter
 import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryLayoutManager
@@ -24,7 +23,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import kotlin.reflect.full.memberProperties
 
 
 class SearchFragment : DialogFragment() {
@@ -100,21 +98,90 @@ class SearchFragment : DialogFragment() {
     private fun displayNutrients(product: Product) {
         var htmlTemplate = readeFileFromAssets("nutrients_template.html")
 
+        val nutrients = product.nutrients
         val nutrientInfosHTML = mutableListOf<String>()
-        for (property in Nutrients::class.memberProperties) {
-            val nutrient = property.call(product.nutrients) as NutrientInfo?
-            nutrient?.let {
-                val name = nutrient.nameTranslations.getTranslation(LANG, property.name)
-                val perHundred = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perHundred, " ${nutrient.unit}", "")
-                val perPortion = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perPortion, " ${nutrient.unit}", "")
-                val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perDay, "", "")
-                val nutrientInfoHtml = String.format(NUTRIENT_MAIN_HTML_TEMPLATE, name, perHundred, perPortion, perDay)
-                val nutrientInfoHtml2 = String.format(NUTRIENT_SUB_HTML_TEMPLATE, name, perHundred, perPortion, perDay)
-                nutrientInfosHTML.add(nutrientInfoHtml)
-                nutrientInfosHTML.add(nutrientInfoHtml2)
-            }
+        val vitaminsInfosHTML = mutableListOf<String>()
+
+        val quantityStr = StringUtils.trimTrailingZeroAndAddSuffix(product.quantity.toDouble(), " ${product.unit}", "-") ?: "-"
+        val portionStr = StringUtils.trimTrailingZeroAndAddSuffix(product.portion_quantity.toDouble(), " ${product.portion_unit}", "-") ?: "-"
+
+        fun formatNutrientLine(nutrient: NutrientInfo?, defaultName: String, isMainNutrient: Boolean = true): Boolean {
+
+            if (nutrient == null) return false
+
+            val name = nutrient.nameTranslations.getTranslation(LANG, defaultName)
+            val perHundred = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perHundred, " ${nutrient.unit}", "")
+            val perPortion = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perPortion, " ${nutrient.unit}", "")
+            val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perDay, "", "")
+
+            val template = if (isMainNutrient) NUTRIENT_MAIN_HTML_TEMPLATE else NUTRIENT_SUB_HTML_TEMPLATE
+            val result = String.format(template, name, perHundred, perPortion, perDay)
+
+            return nutrientInfosHTML.add(result)
         }
+
+        fun formatVitamineLine(nutrient1: NutrientInfo?, nutrient2: NutrientInfo?, defaultName: String) {
+            var nutrient1Str: String? = null
+            var nutrient2Str: String? = null
+
+            if (nutrient1 != null) {
+                val name = nutrient1.nameTranslations.getTranslation(LANG, defaultName)
+                val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient1.perDay, "", "")
+                nutrient1Str = "$name $perDay%"
+            }
+
+            if (nutrient2 != null) {
+                val name = nutrient2.nameTranslations.getTranslation(LANG, defaultName)
+                val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient2.perDay, "", "")
+                nutrient2Str = "$name $perDay%"
+            }
+
+
+            if (nutrient1Str.isNullOrBlank() && nutrient1Str.isNullOrBlank()) return
+
+            val result = String.format(VITAMINE_HTML_TEMPLATE, nutrient1Str, nutrient2Str ?: "")
+            vitaminsInfosHTML.add(result)
+        }
+
+        var hasMainNutrient: Boolean = false
+        formatNutrientLine(nutrients.energy, "")
+        formatNutrientLine(nutrients.energy_kcal, "")
+        formatNutrientLine(nutrients.cholesterol, "")
+        hasMainNutrient = formatNutrientLine(nutrients.carbohydrates, "")
+        formatNutrientLine(nutrients.saccharose, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.fructose, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.glucose, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.fiber, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.sugars, "", !hasMainNutrient)
+        hasMainNutrient = formatNutrientLine(nutrients.fat, "")
+        formatNutrientLine(nutrients.saturated_fat, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.monounsaturatedFattyAcids, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.polyunsaturatedFattyAcids, "", !hasMainNutrient)
+        hasMainNutrient = formatNutrientLine(nutrients.salt, "")
+        formatNutrientLine(nutrients.sodium, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.iodine, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.selenium, "", !hasMainNutrient)
+        formatNutrientLine(nutrients.lactose, "")
+        formatNutrientLine(nutrients.polyols, "")
+        formatNutrientLine(nutrients.protein, "")
+        formatVitamineLine(nutrients.biotin, nutrients.calcium, "")
+        formatVitamineLine(nutrients.folicAcid, nutrients.iron, "")
+        formatVitamineLine(nutrients.magnesium, nutrients.omega_3_fatty_acids, "")
+        formatVitamineLine(nutrients.omega_6_fatty_acids, nutrients.phosphorus, "")
+        formatVitamineLine(nutrients.provitaminACarotene, nutrients.vitaminA, "")
+        formatVitamineLine(nutrients.vitaminB12Cobalamin, nutrients.vitaminB1Thiamin, "")
+        formatVitamineLine(nutrients.vitaminB3Niacin, nutrients.vitaminB5PanthothenicAcid, "")
+        formatVitamineLine(nutrients.vitaminB6Pyridoxin, nutrients.vitaminB2Riboflavin, "")
+        formatVitamineLine(nutrients.vitaminCAscorbicAcid, nutrients.vitaminDCholacalciferol, "")
+        formatVitamineLine(nutrients.vitaminETocopherol, nutrients.vitaminK, "")
+        formatVitamineLine(nutrients.zinco, null, "")
+
+        htmlTemplate = htmlTemplate.replace("[QUANTITY]", quantityStr)
+        htmlTemplate = htmlTemplate.replace("[PORTION]", portionStr)
+        htmlTemplate = htmlTemplate.replace("[UNIT]", product.unit)
         htmlTemplate = htmlTemplate.replace("[NUTRIENTS_ITEMS]", nutrientInfosHTML.joinToString(separator = ""))
+        htmlTemplate = htmlTemplate.replace("[VITAMINS_ITEMS]", vitaminsInfosHTML.joinToString(separator = ""))
+
         nutrients_table_webview.loadDataWithBaseURL("", htmlTemplate, "text/html", "UTF-8", "")
 
     }
@@ -152,6 +219,7 @@ class SearchFragment : DialogFragment() {
             "<tr><th colspan=\"2\"><b>%1s</b></th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><<td><b>%4s</b></td>/tr>"
         private const val NUTRIENT_SUB_HTML_TEMPLATE =
             "<tr><td class=\"blank-cell\"></td><th>%1s</th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><td style=\"text-align:right\"><b>%4s</b></td></tr>"
+        private const val VITAMINE_HTML_TEMPLATE = "<tr><td colspan=\"2\"> • %1s</td><td> • %2s</td></tr>"
 
         private val LANG = Lang.ENGLISCH
 

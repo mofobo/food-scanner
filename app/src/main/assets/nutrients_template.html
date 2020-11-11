@@ -105,7 +105,6 @@ p {
   text-align: left;
 }
 .performance-facts__table--grid td:last-child::before {
-  content: "•";
   font-weight: bold;
   margin: 0 0.25rem 0 0;
 }
@@ -126,6 +125,9 @@ p {
 
 
 
+
+
+
     </style>
 </head>
 
@@ -133,32 +135,26 @@ p {
 <section class="performance-facts">
     <header class="performance-facts__header">
         <h1 class="performance-facts__title">Nutrition Facts</h1>
-        <p>Serving Size 1/2 cup (about 82g)
-        <p>Serving Per Container 8</p>
+        <p></p>
     </header>
     <table class="performance-facts__table">
         <thead>
         <tr>
-            <th colspan="3" class="small-info">
-                Amount Per Serving
+            <th colspan="3">
+                <b>Quantity: [QUANTITY]</b>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="3">
+                <b>Portion: [PORTION]</b>
             </th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <th colspan="3">
-                <b>Calories</b>
-                200
-            </th>
-            <td>
-                Calories from Fat
-                130
-            </td>
-        </tr>
         <tr class="thick-row">
             <td colspan="2"></td>
             <td class="small-info" style="text-align:right">
-                <b>100</b>
+                <b>100[UNIT]</b>
             </td>
             <td class="small-info" style="text-align:right">
                 <b>portion</b>
@@ -176,25 +172,9 @@ p {
 
     <table class="performance-facts__table--grid">
         <tbody>
-        <tr>
-            <td colspan="2">
-                Vitamin A
-                10%
-            </td>
-            <td>
-                Vitamin C
-                0%
-            </td>
-        </tr>
+        [VITAMINS_ITEMS]
         <tr class="thin-end">
-            <td colspan="2">
-                Calcium
-                10%
-            </td>
-            <td>
-                Iron
-                6%
-            </td>
+            <td class="blank-cell" colspan="5"></td>
         </tr>
         </tbody>
     </table>
