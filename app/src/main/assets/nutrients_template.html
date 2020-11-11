@@ -2,135 +2,108 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Nutrition Facts Table in HTML & CSS</title>
-    <!-- <link rel="stylesheet" href="file:///android_asset/nutrients_template.css"> -->
-
     <style>
-@charset "UTF-8";
-
-html, body {
-    height: 100%;
-}
-
-html {
-    display: table;
-    margin: auto;
-}
-
-body {
-  font-size: small;
-  line-height: 1.4;
-   display: table-cell;
-    vertical-align: middle;
-
-}
-
-p {
-  margin: 0;
-}
-
-.performance-facts {
-  border: 1px solid black;
-  margin: 0px;
-  float: left;
-  width: 90;
-  padding: 0.5rem;
-}
-.performance-facts table {
-  border-collapse: collapse;
-}
-
-.performance-facts__title {
-  font-weight: bold;
-  font-size: 2rem;
-  margin: 0 0 0.25rem 0;
-}
-
-.performance-facts__header {
-  border-bottom: 10px solid black;
-  padding: 0 0 0.25rem 0;
-  margin: 0 0 0.5rem 0;
-}
-.performance-facts__header p {
-  margin: 0;
-}
-
-.performance-facts__table, .performance-facts__table--small, .performance-facts__table--grid {
-  width: 100%;
-}
-.performance-facts__table thead tr th, .performance-facts__table--small thead tr th, .performance-facts__table--grid thead tr th, .performance-facts__table thead tr td, .performance-facts__table--small thead tr td, .performance-facts__table--grid thead tr td {
-  border: 0;
-}
-.performance-facts__table th, .performance-facts__table--small th, .performance-facts__table--grid th, .performance-facts__table td, .performance-facts__table--small td, .performance-facts__table--grid td {
-  font-weight: normal;
-  text-align: left;
-  padding: 0.25rem 0;
-  border-top: 1px solid black;
-  white-space: nowrap;
-}
-.performance-facts__table td:last-child, .performance-facts__table--small td:last-child, .performance-facts__table--grid td:last-child {
-  text-align: right;
-}
-.performance-facts__table .blank-cell, .performance-facts__table--small .blank-cell, .performance-facts__table--grid .blank-cell {
-  width: 1rem;
-  border-top: 0;
-}
-.performance-facts__table .thick-row th, .performance-facts__table--small .thick-row th, .performance-facts__table--grid .thick-row th, .performance-facts__table .thick-row td, .performance-facts__table--small .thick-row td, .performance-facts__table--grid .thick-row td {
-  border-top-width: 5px;
-}
-
-.small-info {
-  font-size: 0.7rem;
-}
-
-.performance-facts__table--small {
-  border-bottom: 1px solid #999;
-  margin: 0 0 0.5rem 0;
-}
-.performance-facts__table--small thead tr {
-  border-bottom: 1px solid black;
-}
-.performance-facts__table--small td:last-child {
-  text-align: left;
-}
-.performance-facts__table--small th, .performance-facts__table--small td {
-  border: 0;
-  padding: 0;
-}
-
-.performance-facts__table--grid {
-  margin: 0 0 0.5rem 0;
-}
-.performance-facts__table--grid td:last-child {
-  text-align: left;
-}
-.performance-facts__table--grid td:last-child::before {
-  font-weight: bold;
-  margin: 0 0.25rem 0 0;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.thick-end {
-  border-bottom: 10px solid black;
-}
-
-.thin-end {
-  border-bottom: 1px solid black;
-}
-
-
-
-
-
-
-
-
-    </style>
+         @charset "UTF-8";
+         html, body {
+         height: 100%;
+         }
+         html {
+         display: table;
+         margin: auto;
+         }
+         body {
+         display: table-cell;
+         font-size: small;
+         line-height: 1.4;
+         vertical-align: middle;
+         }
+         p {
+         margin: 0;
+         }
+         .performance-facts {
+         border: 1px solid black;
+         float: left;
+         margin: 0;
+         padding: 0.5rem;
+         width: 90;
+         }
+         .performance-facts table {
+         border-collapse: collapse;
+         }
+         .performance-facts__title {
+         font-size: 2rem;
+         font-weight: bold;
+         margin: 0 0 0.25rem 0;
+         }
+         .performance-facts__header {
+         border-bottom: 10px solid black;
+         margin: 0 0 0.5rem 0;
+         padding: 0 0 0.25rem 0;
+         }
+         .performance-facts__header p {
+         margin: 0;
+         }
+         .performance-facts__table, .performance-facts__table--small, .performance-facts__table--grid {
+         width: 100%;
+         }
+         .performance-facts__table thead tr th, .performance-facts__table--small thead tr th, .performance-facts__table--grid thead tr th, .performance-facts__table thead tr td, .performance-facts__table--small thead tr td, .performance-facts__table--grid thead tr td {
+         border: 0;
+         }
+         .performance-facts__table th, .performance-facts__table--small th, .performance-facts__table--grid th, .performance-facts__table td, .performance-facts__table--small td, .performance-facts__table--grid td {
+         border-top: 1px solid black;
+         font-weight: normal;
+         padding: 0.25rem 0;
+         text-align: left;
+         white-space: nowrap;
+         }
+         .performance-facts__table td:last-child, .performance-facts__table--small td:last-child, .performance-facts__table--grid td:last-child {
+         text-align: right;
+         }
+         .performance-facts__table .blank-cell, .performance-facts__table--small .blank-cell, .performance-facts__table--grid .blank-cell {
+         border-top: 0;
+         width: 1rem;
+         }
+         .performance-facts__table .thick-row th, .performance-facts__table--small .thick-row th, .performance-facts__table--grid .thick-row th, .performance-facts__table .thick-row td, .performance-facts__table--small .thick-row td, .performance-facts__table--grid .thick-row td {
+         border-top-width: 5px;
+         }
+         .small-info {
+         font-size: 0.7rem;
+         }
+         .performance-facts__table--small {
+         border-bottom: 1px solid #999;
+         margin: 0 0 0.5rem 0;
+         }
+         .performance-facts__table--small thead tr {
+         border-bottom: 1px solid black;
+         }
+         .performance-facts__table--small td:last-child {
+         text-align: left;
+         }
+         .performance-facts__table--small th, .performance-facts__table--small td {
+         border: 0;
+         padding: 0;
+         }
+         .performance-facts__table--grid {
+         margin: 0 0 0.5rem 0;
+         }
+         .performance-facts__table--grid td:last-child {
+         text-align: left;
+         }
+         .performance-facts__table--grid td:last-child::before {
+         font-weight: bold;
+         margin: 0 0.25rem 0 0;
+         }
+         .text-center {
+         text-align: center;
+         }
+         .thick-end {
+         border-bottom: 10px solid black;
+         }
+         .thin-end {
+         border-bottom: 1px solid black;
+         }
+      </style>
 </head>
-
 <body>
 <section class="performance-facts">
     <header class="performance-facts__header">
@@ -140,12 +113,12 @@ p {
     <table class="performance-facts__table">
         <thead>
         <tr>
-            <th colspan="3">
+            <th colspan="5">
                 <b>Quantity: [QUANTITY]</b>
             </th>
         </tr>
         <tr>
-            <th colspan="3">
+            <th colspan="5">
                 <b>Portion: [PORTION]</b>
             </th>
         </tr>
@@ -169,7 +142,6 @@ p {
         </tr>
         </tbody>
     </table>
-
     <table class="performance-facts__table--grid">
         <tbody>
         [VITAMINS_ITEMS]
@@ -178,9 +150,9 @@ p {
         </tr>
         </tbody>
     </table>
-
     <p class="small-info">* Percent Daily Values are based on a 2,000 calorie diet. Your daily
-        values may be higher or lower depending on your calorie needs:</p>
+        values may be higher or lower depending on your calorie needs:
+    </p>
 </section>
 </body>
 </html>
