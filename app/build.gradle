@@ -104,6 +104,7 @@ dependencies {
 
     implementation project(path: ':data')
     implementation project(path: ':domain')
+    implementation project(path: ':common')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'

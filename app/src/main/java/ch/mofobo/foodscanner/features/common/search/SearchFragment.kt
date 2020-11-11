@@ -1,19 +1,17 @@
 package ch.mofobo.foodscanner.features.common.search
 
-import android.content.Context
 import android.os.Bundle
 import android.os.Handler
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import ch.mofobo.foodscanner.R
+import ch.mofobo.foodscanner.common.StringUtils
 import ch.mofobo.foodscanner.domain.model.Lang
 import ch.mofobo.foodscanner.domain.model.NutrientInfo
 import ch.mofobo.foodscanner.domain.model.Nutrients
@@ -89,7 +87,7 @@ class SearchFragment : DialogFragment() {
         product.let {
             product.let {
 
-                name_tv.text = it.name_translations.getTranslation(Lang.FRENCH, it.barcode)
+                name_tv.text = it.name_translations.getTranslation(LANG, it.barcode)
 
                 imageGalleryAdapter.setData(it.getImages("large"))
 
@@ -106,22 +104,17 @@ class SearchFragment : DialogFragment() {
         for (property in Nutrients::class.memberProperties) {
             val nutrient = property.call(product.nutrients) as NutrientInfo?
             nutrient?.let {
-                val name = nutrient.nameTranslations.getTranslation(Lang.FRENCH, property.name)
-                val qty = nutrient.getQty()
-                val nutriRec = "69%"
-                val nutrientInfoHtml = String.format(NUTRIENT_MAIN_HTML_TEMPLATE, name, qty, nutriRec)
+                val name = nutrient.nameTranslations.getTranslation(LANG, property.name)
+                val perHundred = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perHundred, " ${nutrient.unit}", "")
+                val perPortion = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perPortion, " ${nutrient.unit}", "")
+                val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perDay, "", "")
+                val nutrientInfoHtml = String.format(NUTRIENT_MAIN_HTML_TEMPLATE, name, perHundred, perPortion, perDay)
+                val nutrientInfoHtml2 = String.format(NUTRIENT_SUB_HTML_TEMPLATE, name, perHundred, perPortion, perDay)
                 nutrientInfosHTML.add(nutrientInfoHtml)
+                nutrientInfosHTML.add(nutrientInfoHtml2)
             }
         }
         htmlTemplate = htmlTemplate.replace("[NUTRIENTS_ITEMS]", nutrientInfosHTML.joinToString(separator = ""))
-
-        val manager = requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val metrics = DisplayMetrics()
-        manager.defaultDisplay.getMetrics(metrics)
-        metrics.widthPixels /= metrics.density.toInt()
-        nutrients_table_webview.settings.javaScriptEnabled = true
-        htmlTemplate = htmlTemplate.replace("[WIDTH_PX]",  metrics.widthPixels.toString())
-
         nutrients_table_webview.loadDataWithBaseURL("", htmlTemplate, "text/html", "UTF-8", "")
 
     }
@@ -155,8 +148,12 @@ class SearchFragment : DialogFragment() {
     }
 
     companion object {
-        private const val NUTRIENT_MAIN_HTML_TEMPLATE = "<tr><th colspan=\"2\"><b>%1s</b>%2s</th><td><b>%3s</b></td></tr>"
-        private const val NUTRIENT_SUB_HTML_TEMPLATE = "<tr><td class=\"blank-cell\"></td><th>[NUTRIENT_NAME] [NUTRIENT_QTY]</th><td><b>[NUTRIENT_REC]</b></td></tr>"
+        private const val NUTRIENT_MAIN_HTML_TEMPLATE =
+            "<tr><th colspan=\"2\"><b>%1s</b></th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><<td><b>%4s</b></td>/tr>"
+        private const val NUTRIENT_SUB_HTML_TEMPLATE =
+            "<tr><td class=\"blank-cell\"></td><th>%1s</th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><td style=\"text-align:right\"><b>%4s</b></td></tr>"
+
+        private val LANG = Lang.ENGLISCH
 
         private const val LAYOUT_ID = R.layout.fragment_search
     }
