@@ -85,7 +85,7 @@ class SearchFragment : DialogFragment() {
         product.let {
             product.let {
 
-                name_tv.text = it.name_translations.getTranslation(LANG, it.barcode)
+                name_tv.text = it.name_translations.getTranslation(DEFAULT_LANG, it.barcode)
 
                 imageGalleryAdapter.setData(it.getImages("large"))
 
@@ -109,7 +109,7 @@ class SearchFragment : DialogFragment() {
 
             if (nutrient == null) return false
 
-            val name = nutrient.nameTranslations.getTranslation(LANG, defaultName)
+            val name = nutrient.nameTranslations.getTranslation(DEFAULT_LANG, defaultName)
             val perHundred = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perHundred, " ${nutrient.unit}", "")
             val perPortion = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perPortion, " ${nutrient.unit}", "")
             val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perDay, "", "")
@@ -125,13 +125,13 @@ class SearchFragment : DialogFragment() {
             var nutrient2Str: String? = null
 
             if (nutrient1 != null) {
-                val name = nutrient1.nameTranslations.getTranslation(LANG, defaultName)
+                val name = nutrient1.nameTranslations.getTranslation(DEFAULT_LANG, defaultName)
                 val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient1.perDay, "", "")
                 nutrient1Str = "$name $perDay%"
             }
 
             if (nutrient2 != null) {
-                val name = nutrient2.nameTranslations.getTranslation(LANG, defaultName)
+                val name = nutrient2.nameTranslations.getTranslation(DEFAULT_LANG, defaultName)
                 val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient2.perDay, "", "")
                 nutrient2Str = "$name $perDay%"
             }
@@ -216,12 +216,12 @@ class SearchFragment : DialogFragment() {
 
     companion object {
         private const val NUTRIENT_MAIN_HTML_TEMPLATE =
-            "<tr><th colspan=\"2\"><b>%1s</b></th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><<td><b>%4s</b></td>/tr>"
+            "<tr><th colspan=\"2\"><b>%1s</b></th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><td><b>%4s</b></td></tr>"
         private const val NUTRIENT_SUB_HTML_TEMPLATE =
             "<tr><td class=\"blank-cell\"></td><th>%1s</th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><td style=\"text-align:right\"><b>%4s</b></td></tr>"
         private const val VITAMINE_HTML_TEMPLATE = "<tr><td colspan=\"2\"> • %1s</td><td> • %2s</td></tr>"
 
-        private val LANG = Lang.ENGLISCH
+        private val DEFAULT_LANG = Lang.ENGLISCH
 
         private const val LAYOUT_ID = R.layout.fragment_search
     }
