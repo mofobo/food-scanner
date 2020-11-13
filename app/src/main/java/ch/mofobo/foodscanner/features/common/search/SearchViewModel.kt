@@ -7,7 +7,6 @@ import ch.mofobo.foodscanner.utils.NetworkHelper
 import ch.mofobo.foodscanner.utils.Resource
 import ch.mofobo.foodscanner.utils.SingleLiveEvent
 import kotlinx.coroutines.*
-import kotlin.reflect.full.memberProperties
 
 class SearchViewModel(
     private val productDataRepository: ProductDataRepository,
@@ -22,7 +21,7 @@ class SearchViewModel(
     fun searchProduct(barcode: String) {
         val request = SearchRequest(Query(Terms(barcode = listOf(barcode))))
         coroutineScope.launch {
-            val getProperty = productDataRepository.getProduct(request)
+            val getProperty = productDataRepository.fetchProduct(request)
             try {
                 product.postValue(Resource.success(getProperty.body()?.product))
             } catch (e: Exception) {

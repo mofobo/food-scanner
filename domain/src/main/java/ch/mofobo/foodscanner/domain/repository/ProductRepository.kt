@@ -7,6 +7,15 @@ import retrofit2.Response
 
 interface ProductRepository {
 
-    suspend fun getProduct(id: Long): Response<Product>
-    suspend fun getProduct(searchRequest: SearchRequest): Response<SearchResponse>
+    suspend fun fetchProduct(id: Long): Response<Product>
+
+    suspend fun fetchProduct(searchRequest: SearchRequest): Response<SearchResponse>
+
+    suspend fun getAll(): List<Product>
+
+    suspend fun add(product: Product)
+
+    suspend fun remove(product: Product)
+
+    suspend fun removeAll()
 }

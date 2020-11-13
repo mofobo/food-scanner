@@ -7,6 +7,7 @@ val repoModule =
     module {
         single {
             ProductDataRepository(
+                get(),
                 get()
             )
         }

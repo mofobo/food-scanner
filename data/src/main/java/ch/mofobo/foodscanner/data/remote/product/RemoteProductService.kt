@@ -6,7 +6,7 @@ import ch.mofobo.foodscanner.domain.model.SearchResponse
 import retrofit2.Response
 import retrofit2.http.*
 
-interface ProductService {
+interface RemoteProductService {
 
     @GET("products/{id}")
     suspend fun getProduct(@Path("id") reservationID: Long): Response<Product>
