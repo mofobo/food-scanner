@@ -3,6 +3,7 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.7">
       <module name="FoodScanner.app" target="1.8" />
+      <module name="FoodScanner.data" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
