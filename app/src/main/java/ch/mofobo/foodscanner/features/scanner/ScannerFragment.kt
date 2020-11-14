@@ -38,7 +38,7 @@ class ScannerFragment : Fragment() {
 
         clear_btn.setOnClickListener { barcode_manual_input.text?.clear() }
         search_btn.setOnClickListener {
-            navController.navigate(ScannerFragmentDirections.actionNavigationToSearch("7613312089040"))
+            navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1,"7613312089040"))
         }
 
         scan_btn.setOnClickListener {

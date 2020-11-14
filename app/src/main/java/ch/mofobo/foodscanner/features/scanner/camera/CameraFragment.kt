@@ -2,7 +2,6 @@ package ch.mofobo.foodscanner.features.scanner.camera
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Size
 import android.view.LayoutInflater
@@ -86,7 +85,7 @@ class CameraFragment : DialogFragment() {
         viewModel.actions.observe(viewLifecycleOwner, Observer {
             it?.let {
                 when (it) {
-                    is CameraViewModel.Action.SearchBarcode -> navController.navigate(CameraFragmentDirections.actionNavigationToSearch(it.barcode))
+                    is CameraViewModel.Action.SearchBarcode -> navController.navigate(CameraFragmentDirections.actionNavigationToDetails(-1, it.barcode))
                 }
             }
         })

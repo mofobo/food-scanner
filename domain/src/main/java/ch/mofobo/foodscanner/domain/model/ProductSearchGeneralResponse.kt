@@ -1,6 +1,6 @@
 package ch.mofobo.foodscanner.domain.model
 
-data class SearchResponse(
+data class ProductSearchGeneralResponse(
     val took: Int,
     val timed_out: Boolean,
     val _shards: Shards,

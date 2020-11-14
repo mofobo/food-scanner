@@ -1,6 +1,6 @@
-package ch.mofobo.foodscanner.di.module
+package ch.mofobo.foodscanner.di
 
-import ch.mofobo.foodscanner.features.common.search.SearchViewModel
+import ch.mofobo.foodscanner.features.details.DetailsViewModel
 import ch.mofobo.foodscanner.features.history.HistoryViewModel
 import ch.mofobo.foodscanner.features.home.HomeViewModel
 import ch.mofobo.foodscanner.features.scanner.ScannerViewModel
@@ -12,9 +12,9 @@ val viewModelModule =
     module {
         viewModel { HomeViewModel() }
         viewModel { ScannerViewModel() }
-        viewModel { HistoryViewModel() }
+        viewModel { HistoryViewModel(get()) }
 
         viewModel { CameraViewModel() }
-        viewModel { SearchViewModel(get(), get()) }
+        viewModel { DetailsViewModel(get(), get()) }
 
     }

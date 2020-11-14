@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/fragment_search_image_view_holder" />
+        tools:listitem="@layout/fragment_details_image_view_holder" />
 
     <TextView
         android:id="@+id/name_tv"

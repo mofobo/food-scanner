@@ -1,4 +1,4 @@
-package ch.mofobo.foodscanner.features.common.search.gallery
+package ch.mofobo.foodscanner.features.details.gallery
 
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager

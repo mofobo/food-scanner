@@ -1,12 +1,8 @@
-package ch.mofobo.foodscanner.domain.repository
+package ch.mofobo.foodscanner.data.locale
 
 import ch.mofobo.foodscanner.domain.model.Product
 
-interface ProductRepository {
-
-    suspend fun fetchProduct(id: Long): Product
-
-    suspend fun fetchProduct(barcode: String): Product
+interface LocaleProductDataSource {
 
     suspend fun add(product: Product)
 

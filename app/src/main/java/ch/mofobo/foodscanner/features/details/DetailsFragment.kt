@@ -1,11 +1,11 @@
-package ch.mofobo.foodscanner.features.common.search
+package ch.mofobo.foodscanner.features.details
 
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IntegerRes
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
@@ -17,22 +17,22 @@ import ch.mofobo.foodscanner.common.StringUtils
 import ch.mofobo.foodscanner.domain.model.Lang
 import ch.mofobo.foodscanner.domain.model.NutrientInfo
 import ch.mofobo.foodscanner.domain.model.Product
-import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryAdapter
-import ch.mofobo.foodscanner.features.common.search.gallery.ImageGalleryLayoutManager
+import ch.mofobo.foodscanner.features.details.gallery.ImageGalleryAdapter
+import ch.mofobo.foodscanner.features.details.gallery.ImageGalleryLayoutManager
 import ch.mofobo.foodscanner.utils.recyclerview.RecyclerViewDividerMarginItemDecoration
-import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_details.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
 
-class SearchFragment : DialogFragment() {
+class DetailsFragment : DialogFragment() {
 
     private lateinit var navController: NavController
-    private val viewModel: SearchViewModel by viewModel()
+    private val viewModel: DetailsViewModel by viewModel()
 
-    val args: SearchFragmentArgs by navArgs()
+    val args: DetailsFragmentArgs by navArgs()
 
     private lateinit var imageGalleryAdapter: ImageGalleryAdapter
 
@@ -47,7 +47,9 @@ class SearchFragment : DialogFragment() {
         prepareView()
         oberveViewModel()
 
-        viewModel.searchProduct(args.barcode)
+
+        val id = if (args.id == -1L) null else args.id
+        viewModel.searchProduct(id, args.barcode)
     }
 
     private fun navigateTo(destination: Int) {
@@ -56,7 +58,6 @@ class SearchFragment : DialogFragment() {
 
     private fun prepareView() {
         prepareAdapter()
-        //nutrients_table_webview.loadUrl("file:///android_asset/nutrients_template.html")
     }
 
     private fun prepareAdapter() {
@@ -77,24 +78,23 @@ class SearchFragment : DialogFragment() {
     private fun oberveViewModel() {
 
         viewModel.product.observe(viewLifecycleOwner, Observer {
-            it?.data?.let {
-                displayProduct(it)
-            }
+            it?.let { displayProduct(it) }
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
         })
     }
 
     private fun displayProduct(product: Product) {
         product.let {
-            product.let {
 
-                name_tv.text = it.name_translations.getTranslation(DEFAULT_LANG, it.barcode)
+            name_tv.text = it.name_translations.getTranslation(DEFAULT_LANG, it.barcode)
 
-                imageGalleryAdapter.setData(it.getImages("large"))
+            imageGalleryAdapter.setData(it.getImages("large"))
 
-                Handler().postDelayed({ displayNutrients(it) }, 10)
-            }
+            Handler().postDelayed({ displayNutrients(it) }, 10)
         }
-
     }
 
     private fun displayNutrients(product: Product) {
@@ -225,7 +225,7 @@ class SearchFragment : DialogFragment() {
         private val DEFAULT_LANG = Lang.ENGLISCH
 
         @LayoutRes
-        private const val LAYOUT_ID = R.layout.fragment_search
+        private const val LAYOUT_ID = R.layout.fragment_details
     }
 
 }

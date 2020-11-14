@@ -1,10 +1,8 @@
-package ch.mofobo.foodscanner.di.module
+package ch.mofobo.foodscanner.di
 
 import android.content.Context
 import ch.mofobo.foodscanner.BuildConfig
-import ch.mofobo.foodscanner.data.remote.product.ProductDataSource
-import ch.mofobo.foodscanner.data.remote.product.ProductDataSourceImpl
-import ch.mofobo.foodscanner.data.remote.product.ProductService
+import ch.mofobo.foodscanner.data.remote.RemoteProductService
 import ch.mofobo.foodscanner.utils.FoodRepoAuthenticationInterceptor
 import ch.mofobo.foodscanner.utils.NetworkHelper
 import okhttp3.OkHttpClient
@@ -14,18 +12,29 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-val appModule = module {
+val serviceModule = module {
+    // Services
+    single { provideProductService(get()) }
+
     single { provideOkHttpClient() }
     single { provideRetrofit(get(), BuildConfig.FOODREPO_BASE_URL) }
-    single { provideProductService(get()) }
     single { provideNetworkHelper(androidContext()) }
-
-    single<ProductDataSource> {
-        return@single ProductDataSourceImpl(get())
-    }
 }
 
-private fun provideNetworkHelper(context: Context) = NetworkHelper(context)
+private fun provideProductService(retrofit: Retrofit): RemoteProductService =
+    retrofit.create(
+        RemoteProductService::class.java
+    )
+
+private fun provideRetrofit(
+    okHttpClient: OkHttpClient,
+    BASE_URL: String
+): Retrofit =
+    Retrofit.Builder()
+        .addConverterFactory(MoshiConverterFactory.create())
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .build()
 
 private fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
     val loggingInterceptor = HttpLoggingInterceptor()
@@ -39,17 +48,4 @@ private fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
     .Builder()
     .build()
 
-private fun provideRetrofit(
-    okHttpClient: OkHttpClient,
-    BASE_URL: String
-): Retrofit =
-    Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create())
-        .baseUrl(BASE_URL)
-        .client(okHttpClient)
-        .build()
-
-private fun provideProductService(retrofit: Retrofit): ProductService =
-    retrofit.create(
-        ProductService::class.java
-    )
+private fun provideNetworkHelper(context: Context) = NetworkHelper(context)
