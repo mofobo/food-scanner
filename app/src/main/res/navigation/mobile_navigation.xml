@@ -38,18 +38,22 @@
         tools:layout="@layout/fragment_camera" />
 
     <dialog
-        android:id="@+id/navigation_search"
-        android:name="ch.mofobo.foodscanner.features.common.search.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search">
+        android:id="@+id/navigation_details"
+        android:name="ch.mofobo.foodscanner.features.details.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="id"
+            app:argType="long" />
         <argument
             android:name="barcode"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
     </dialog>
 
 
     <action
-        android:id="@+id/action_navigation_to_search"
-        app:destination="@id/navigation_search" />
+        android:id="@+id/action_navigation_to_details"
+        app:destination="@id/navigation_details" />
 
 </navigation>

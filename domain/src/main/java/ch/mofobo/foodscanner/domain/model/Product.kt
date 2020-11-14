@@ -1,7 +1,7 @@
 package ch.mofobo.foodscanner.domain.model
 
 data class Product(
-    val id: Int,
+    val id: Long,
     val country: String,
     val barcode: String,
     val name_translations: Translations,

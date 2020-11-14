@@ -1,19 +1,18 @@
 package ch.mofobo.foodscanner.domain.repository
 
 import ch.mofobo.foodscanner.domain.model.Product
-import ch.mofobo.foodscanner.domain.model.SearchRequest
-import ch.mofobo.foodscanner.domain.model.SearchResponse
-import retrofit2.Response
 
 interface ProductRepository {
 
-    suspend fun fetchProduct(id: Long): Response<Product>
+    suspend fun fetchProduct(id: Long): Product
 
-    suspend fun fetchProduct(searchRequest: SearchRequest): Response<SearchResponse>
-
-    suspend fun getAll(): List<Product>
+    suspend fun fetchProduct(barcode: String): Product
 
     suspend fun add(product: Product)
+
+    suspend fun get(id: Long?, barcode: String?): Product?
+
+    suspend fun getAll(): List<Product>
 
     suspend fun remove(product: Product)
 

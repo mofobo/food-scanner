@@ -1,4 +1,4 @@
-package ch.mofobo.foodscanner.features.common.search.gallery
+package ch.mofobo.foodscanner.features.details.gallery
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import ch.mofobo.foodscanner.R
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_search_image_view_holder.view.*
+import kotlinx.android.synthetic.main.fragment_details_image_view_holder.view.*
 
 class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -17,7 +17,7 @@ class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
         @LayoutRes
-        private const val LAYOUT_ID = R.layout.fragment_search_image_view_holder
+        private const val LAYOUT_ID = R.layout.fragment_details_image_view_holder
 
         fun create(
             inflater: LayoutInflater,

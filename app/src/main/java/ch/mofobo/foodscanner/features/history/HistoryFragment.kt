@@ -5,11 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.core.util.Consumer
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import ch.mofobo.foodscanner.R
+import ch.mofobo.foodscanner.domain.model.Product
+import ch.mofobo.foodscanner.features.history.list.ProductListAdapter
 import kotlinx.android.synthetic.main.fragment_history.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -18,6 +22,8 @@ class HistoryFragment : Fragment() {
     private lateinit var navController: NavController
 
     private val viewModel: HistoryViewModel by viewModel()
+
+    private lateinit var productListAdapter: ProductListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(LAYOUT_ID, container, false)
@@ -29,6 +35,8 @@ class HistoryFragment : Fragment() {
         navController = view.findNavController()
         prepareView()
         observeViewModel()
+
+        viewModel.getProducts()
     }
 
     private fun navigateTo(destination: Int) {
@@ -36,12 +44,21 @@ class HistoryFragment : Fragment() {
     }
 
     private fun prepareView() {
+        prepareAdapter()
+    }
 
+    private fun prepareAdapter() {
+        products_rv.layoutManager = LinearLayoutManager(requireContext())
+        val itemClickListener = Consumer<Product> { product -> navController.navigate(HistoryFragmentDirections.actionNavigationToDetails(product.id, null)) }
+        productListAdapter = ProductListAdapter(itemClickListener)
+        products_rv.adapter = productListAdapter
     }
 
     private fun observeViewModel() {
-        viewModel.text.observe(viewLifecycleOwner, Observer {
-            text_notifications.text = it
+        viewModel.products.observe(viewLifecycleOwner, Observer {
+            text_notifications.text = "${it.size} products scanned !!!"
+
+            productListAdapter.setData(it)
         })
     }
 

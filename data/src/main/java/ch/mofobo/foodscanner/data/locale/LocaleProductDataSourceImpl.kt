@@ -8,20 +8,28 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
-class LocalProductDataSourceImpl constructor(context: Context) : LocalProductDataSource {
+class LocaleProductDataSourceImpl constructor(context: Context) : LocaleProductDataSource {
 
     private var sharedPreferences: SharedPreferences
     private var listType: Type
-    private lateinit var gson: Gson
+    private val gson: Gson = Gson()
 
     init {
-
-        gson = Gson()
-
         sharedPreferences = context.getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE)
         listType = object : TypeToken<ArrayList<Product>>() {}.type
     }
 
+    override suspend fun add(product: Product) {
+        val products = getAll().toMutableList()
+        products.remove(product)
+        products.add(product)
+        persist(products)
+    }
+
+    override suspend fun get(id: Long?, barcode: String?): Product? {
+        val products = getAll().toMutableList()
+        return products.firstOrNull { it.id == id || it.barcode == barcode }
+    }
 
     override suspend fun getAll(): List<Product> {
         return try {
@@ -33,17 +41,10 @@ class LocalProductDataSourceImpl constructor(context: Context) : LocalProductDat
         }
     }
 
-    override suspend fun add(product: Product) {
-        val tickets = getAll().toMutableList()
-        tickets.remove(product)
-        tickets.add(product)
-        persist(tickets)
-    }
-
     override suspend fun remove(product: Product) {
-        val tickets = getAll().toMutableList()
-        tickets.remove(product)
-        persist(tickets)
+        val products = getAll().toMutableList()
+        products.remove(product)
+        persist(products)
     }
 
     override suspend fun removeAll() {
@@ -51,8 +52,8 @@ class LocalProductDataSourceImpl constructor(context: Context) : LocalProductDat
     }
 
 
-    private fun persist(tickets: List<Product>) {
-        sharedPreferences.edit().putString(TAG, gson.toJson(tickets)).apply()
+    private fun persist(products: List<Product>) {
+        sharedPreferences.edit().putString(TAG, gson.toJson(products)).apply()
     }
 
     companion object {

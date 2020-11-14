@@ -3,13 +3,13 @@ package ch.mofobo.foodscanner
 import android.app.Application
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
-import ch.mofobo.foodscanner.di.module.appModule
-import ch.mofobo.foodscanner.di.module.repoModule
-import ch.mofobo.foodscanner.di.module.viewModelModule
+import ch.mofobo.foodscanner.di.repositoryModule
+import ch.mofobo.foodscanner.di.serviceModule
+import ch.mofobo.foodscanner.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class App : Application(), CameraXConfig.Provider {
+class Application : Application(), CameraXConfig.Provider {
 
     override fun getCameraXConfig(): CameraXConfig {
         return Camera2Config.defaultConfig()
@@ -18,8 +18,14 @@ class App : Application(), CameraXConfig.Provider {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            androidContext(this@App)
-            modules(listOf(appModule, repoModule, viewModelModule))
+            androidContext(this@Application)
+            modules(
+                listOf(
+                    serviceModule,
+                    repositoryModule,
+                    viewModelModule
+                )
+            )
         }
     }
 }
