@@ -12,11 +12,6 @@ class CameraViewModel : ViewModel() {
 
     var isScanned = false
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is fight Fragment"
-    }
-    val text: LiveData<String> = _text
-
     fun onBarcodeScanned(barcode: String?) {
         if (!isScanned && !barcode.isNullOrBlank()) {
             isScanned = true

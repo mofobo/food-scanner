@@ -54,6 +54,10 @@
 
     <action
         android:id="@+id/action_navigation_to_details"
-        app:destination="@id/navigation_details" />
+        app:destination="@id/navigation_details"
+
+        app:popUpTo="@+id/navigation_camera"
+        app:popUpToInclusive="true" />
+    />
 
 </navigation>

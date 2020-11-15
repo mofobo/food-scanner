@@ -1,6 +1,7 @@
 package ch.mofobo.foodscanner
 
 import android.os.Bundle
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -8,8 +9,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import ch.mofobo.foodscanner.R
+import ch.mofobo.foodscanner.features.scanner.camera.CameraFragment
+import ch.mofobo.foodscanner.features.scanner.camera.CameraPermissionManager
 
 class MainActivity : AppCompatActivity() {
+
+    val cameraPermissionManager = CameraPermissionManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +30,18 @@ class MainActivity : AppCompatActivity() {
         )
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.navigation_home,
-            R.id.navigation_scanner,
-            R.id.navigation_history
-        ))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home,
+                R.id.navigation_scanner,
+                R.id.navigation_history
+            )
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        cameraPermissionManager.onRequestPermissionsResult(requestCode, grantResults)
     }
 }
