@@ -1,16 +1,13 @@
 package ch.mofobo.foodscanner
 
 import android.os.Bundle
-import android.widget.Toast
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import ch.mofobo.foodscanner.R
-import ch.mofobo.foodscanner.features.scanner.camera.CameraFragment
 import ch.mofobo.foodscanner.features.scanner.camera.CameraPermissionManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
