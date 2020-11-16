@@ -12,7 +12,6 @@ interface RemoteProductService {
     @GET("products/{id}")
     suspend fun getProduct(@Path("id") reservationID: Long): Response<ProductGeneralResponse>
 
-    //@Headers("Content-Type: application/json")
     @POST("products/_search")
     suspend fun getProduct(@Body searchRequest: SearchRequest): Response<ProductSearchGeneralResponse>
 
