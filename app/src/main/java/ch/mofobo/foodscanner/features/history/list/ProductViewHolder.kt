@@ -9,21 +9,26 @@ import androidx.recyclerview.widget.RecyclerView
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.domain.model.Lang
 import ch.mofobo.foodscanner.domain.model.Product
-import com.squareup.picasso.Picasso
+import ch.mofobo.foodscanner.utils.Dali
 import kotlinx.android.synthetic.main.fragment_history_product_view_holder.view.*
+
 
 class ProductViewHolder(itemView: View, private val itemClickConsumer: Consumer<Product>) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(product: Product) {
 
-        product.images.firstOrNull()?.let {
-            Picasso.get().load(it.thumb).into(itemView.thumb)
-        }
+        product.images.firstOrNull()?.let { images -> itemView.thumb.let { imageView -> Dali.get().load(images.thumb).into(imageView) } }
 
         itemView.name.text = product.display_name_translations.getTranslation(Lang.ENGLISCH, product.barcode)
 
         itemView.setOnClickListener { itemClickConsumer.accept(product) }
     }
+
+
+    private fun loadImage() {
+
+    }
+
 
     companion object {
         @LayoutRes
