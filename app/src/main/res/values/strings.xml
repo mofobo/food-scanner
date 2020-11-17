@@ -10,4 +10,6 @@
     <string name="exception_unknown">Unknown error occured, please try again!</string>
     <string name="exception_product_offline">Those informations may not be up to date!</string>
     <string name="product_not_found">Product not found</string>
+    <string name="lang">ENGLISCH</string>
+    <string name="exception_no_internet">No Internet! Check your connection.</string>
 </resources>

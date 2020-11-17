@@ -94,14 +94,14 @@ class DetailsFragment : DialogFragment() {
 
         imageGalleryAdapter = ImageGalleryAdapter()
         image_gallery_rv.adapter = imageGalleryAdapter
-        imageGalleryAdapter.setData(listOf("", "", ""))
+        imageGalleryAdapter.setData(emptyList())
 
     }
 
     private fun oberveViewModel() {
 
         viewModel.product.observe(viewLifecycleOwner, Observer {
-            product=it
+            product = it
             if (product != null) changeScene(sceneProductDetails) else changeScene(sceneProductNotFound)
         })
 
@@ -111,12 +111,18 @@ class DetailsFragment : DialogFragment() {
                     if (viewModel.product.value != null) {
                         Toast.makeText(requireContext(), R.string.exception_product_offline, Toast.LENGTH_LONG).show()
                     } else {
-                       changeScene(sceneProductNotFound)
+                        changeScene(sceneProductNotFound)
                     }
                 }
                 is ProductSearchException -> {
                 }
                 is NetworkException -> {
+                    if (viewModel.product.value != null) {
+                        Toast.makeText(requireContext(), R.string.exception_product_offline, Toast.LENGTH_LONG).show()
+                    } else {
+                        changeScene(sceneProductNotFound)
+                        Toast.makeText(requireContext(), R.string.exception_no_internet, Toast.LENGTH_LONG).show()
+                    }
                 }
                 is UnknownException -> Toast.makeText(requireContext(), R.string.exception_unknown, Toast.LENGTH_LONG).show()
             }
@@ -158,7 +164,7 @@ class DetailsFragment : DialogFragment() {
     private fun displayProduct(product: Product) {
         product.let {
 
-            name_tv.text = it.name_translations.getTranslation(DEFAULT_LANG, it.barcode)
+            name_tv.text = it.name_translations.getAnyTranslation(Lang.valueOf(requireContext().getString(R.string.lang)), it.barcode)
 
             imageGalleryAdapter.setData(it.getImages("large"))
 

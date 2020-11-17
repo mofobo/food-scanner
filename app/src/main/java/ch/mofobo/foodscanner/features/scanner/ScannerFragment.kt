@@ -39,16 +39,18 @@ class ScannerFragment : Fragment() {
     }
 
     private fun prepareView() {
-        clear_btn.isEnabled = false
-        search_btn.isEnabled = false
+        clear_btn.isEnabled = sharedViewModel.barcode.length != 0
+        search_btn.isEnabled = sharedViewModel.barcode.length != 0
 
-        clear_btn.setOnClickListener { barcode_manual_input.text?.clear() }
+        clear_btn.setOnClickListener { resetBarcodeManualInput()}
         search_btn.setOnClickListener {
             navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
+            resetBarcodeManualInput()
         }
 
         scan_btn.setOnClickListener {
             navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
+            resetBarcodeManualInput()
         }
 
         barcode_manual_input.setText(sharedViewModel.barcode)
@@ -59,12 +61,18 @@ class ScannerFragment : Fragment() {
                 override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
                 override fun afterTextChanged(editable: Editable) {
-                    sharedViewModel.barcode=editable.toString()
+                    sharedViewModel.barcode = editable.toString()
                     val isTextAvailable = editable.length != 0
                     clear_btn.isEnabled = isTextAvailable
                     search_btn.isEnabled = isTextAvailable
                 }
             })
+    }
+
+
+    fun resetBarcodeManualInput() {
+        sharedViewModel.barcode = ""
+        barcode_manual_input.text?.clear()
     }
 
     private fun observeViewModel() {
