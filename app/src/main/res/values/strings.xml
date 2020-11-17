@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">FoodScanner</string>
-    <string name="title_home" translatable="false">Home</string>
     <string name="title_scanner" translatable="false">Scanner</string>
     <string name="title_history" translatable="false">History</string>
     <string name="global_enter_barcode" translatable="false">Enter barcode</string>
