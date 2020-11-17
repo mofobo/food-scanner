@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.util.Log
 import android.widget.ImageView
-import ch.mofobo.foodscanner.R
 import java.io.InputStream
 import java.net.URL
 
@@ -30,16 +29,16 @@ class Dali {
 
         override fun doInBackground(vararg urls: String?): Bitmap? {
 
-            val urldisplay = urls[0]
-            var mIcon11: Bitmap? = null
+            val url = urls[0]
+            var bitmap: Bitmap? = null
             try {
-                val inputStream: InputStream = URL(urldisplay).openStream()
-                mIcon11 = BitmapFactory.decodeStream(inputStream)
+                val inputStream: InputStream = URL(url).openStream()
+                bitmap = BitmapFactory.decodeStream(inputStream)
             } catch (e: Exception) {
                 e.message?.let { Log.e("Error", it) }
                 e.printStackTrace()
             }
-            return mIcon11
+            return bitmap
         }
     }
 

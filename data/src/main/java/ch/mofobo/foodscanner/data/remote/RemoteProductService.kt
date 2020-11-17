@@ -1,9 +1,8 @@
 package ch.mofobo.foodscanner.data.remote
 
-import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.domain.model.ProductGeneralResponse
-import ch.mofobo.foodscanner.domain.model.SearchRequest
 import ch.mofobo.foodscanner.domain.model.ProductSearchGeneralResponse
+import ch.mofobo.foodscanner.domain.model.SearchRequest
 import retrofit2.Response
 import retrofit2.http.*
 

@@ -2,6 +2,7 @@ package ch.mofobo.foodscanner.features.details
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ch.mofobo.foodscanner.domain.exception.BaseException
 import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.domain.repository.ProductRepository
 import ch.mofobo.foodscanner.utils.NetworkHelper
@@ -16,7 +17,7 @@ class DetailsViewModel(
 ) : ViewModel() {
 
     val product = MutableLiveData<Product>()
-    val error = MutableLiveData<Throwable>()
+    val error = MutableLiveData<BaseException>()
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.IO)
@@ -24,29 +25,30 @@ class DetailsViewModel(
     fun searchProduct(id: Long?, barcode: String?) {
 
         coroutineScope.launch {
-            try {
 
-                val localProduct = productRepository.get(id, barcode)
-                if (localProduct != null) product.postValue(localProduct)
+            val localProduct = productRepository.get(id, barcode)
+            if (localProduct != null) product.postValue(localProduct)
 
-                if (networkHelper.isNetworkConnected()) {
+            if (networkHelper.isNetworkConnected()) {
 
+                try {
                     val remoteProduct = when {
                         id != null -> productRepository.fetchProduct(id)
                         barcode != null -> productRepository.fetchProduct(barcode)
-                        else -> throw Exception("DetailsViewModel.searchProduct(id?, barcode?): both are null")
+                        else -> throw BaseException.ProductSearchException
                     }
 
                     productRepository.add(remoteProduct)
                     product.postValue(remoteProduct)
 
-                } else {
-                    error.postValue(Throwable("No Internet :-("))
+                } catch (e: BaseException) {
+                    error.postValue(e)
                 }
 
-            } catch (e: Exception) {
-                error.postValue(Throwable(e.message ?: "No message?"))
+            } else {
+                error.postValue(BaseException.NetworkException)
             }
+
         }
     }
 

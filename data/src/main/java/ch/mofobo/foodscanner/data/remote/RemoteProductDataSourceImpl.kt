@@ -1,5 +1,6 @@
 package ch.mofobo.foodscanner.data.remote
 
+import ch.mofobo.foodscanner.domain.exception.BaseException
 import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.domain.model.Query
 import ch.mofobo.foodscanner.domain.model.SearchRequest
@@ -15,7 +16,7 @@ class RemoteProductDataSourceImpl(private val remoteProductService: RemoteProduc
             if (it.isSuccessful) it.body()?.let { it.product?.let { return it } }
         }
 
-        throw java.lang.Exception("Shit happens:  RemoteProductDataSourceImpl.fetchProduct(id)")
+        throw BaseException.ProductNotFoundException
     }
 
     override suspend fun fetchProduct(barcode: String): Product {
@@ -28,6 +29,6 @@ class RemoteProductDataSourceImpl(private val remoteProductService: RemoteProduc
             if (it.isSuccessful) it.body()?.let { it.product?.let { return it } }
         }
 
-        throw Exception("Shit happens: RemoteProductDataSourceImpl.fetchProduct(barcode)")
+        throw BaseException.ProductNotFoundException
     }
 }

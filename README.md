@@ -27,7 +27,6 @@ FoodScanner use a number of open source projects to work properly:
 * Design: Material
 * Layout: ConstraintLayout, CardView
 * Animation Lottie (AirBnB)
-* Picture: Picasso
 * Navigation: Jetpack-Android Navigation
 
 * Camera: Jetpack-CameraX

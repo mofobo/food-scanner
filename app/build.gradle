@@ -147,10 +147,7 @@ dependencies {
 
     // ZXing
     implementation "com.google.zxing:core:$zxing_version"
-
-    // Picasso: library for image handling
-    implementation "com.squareup.picasso:picasso:$picasso_version"
-
+    
     // Lottie
     implementation "com.airbnb.android:lottie:$lottie_version"
 
