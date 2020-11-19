@@ -49,7 +49,7 @@ android {
             dimension "default"
         }
 
-        tes {
+        test {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner.test"
 
@@ -64,7 +64,7 @@ android {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner.integ"
 
-            resValue "string", "flavored_app_name", "FoodScanner Int"
+            resValue "string", "flavored_app_name", "FoodScanner Integ"
             buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
             buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
 
