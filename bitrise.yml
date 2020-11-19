@@ -82,6 +82,11 @@ workflows:
             - app_path_pattern: '*/build/outputs/apk/*.apk'
             - variant: ntgDebug
       - android-build:
+          title: Build prodRelease APK
+          inputs:
+            - build_type: apk
+            - variant: prdRelease
+      - android-build:
           title: Build prodRelease AAB
           inputs:
             - build_type: aab
@@ -129,3 +134,4 @@ app:
     - opts:
         is_expand: false
       VARIANT: prdRelease
+      
