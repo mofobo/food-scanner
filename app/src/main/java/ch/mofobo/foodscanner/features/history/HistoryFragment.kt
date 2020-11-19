@@ -56,8 +56,6 @@ class HistoryFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.products.observe(viewLifecycleOwner, Observer {
-            text_notifications.text = "${it.size} products scanned !!!"
-
             productListAdapter.setData(it)
         })
     }

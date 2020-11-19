@@ -12,8 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
+import androidx.transition.Scene
+import androidx.transition.Transition
+import androidx.transition.TransitionInflater
+import androidx.transition.TransitionManager
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.common.StringUtils
+import ch.mofobo.foodscanner.domain.exception.BaseException.*
 import ch.mofobo.foodscanner.domain.model.Lang
 import ch.mofobo.foodscanner.domain.model.NutrientInfo
 import ch.mofobo.foodscanner.domain.model.Product
@@ -21,6 +26,7 @@ import ch.mofobo.foodscanner.features.details.gallery.ImageGalleryAdapter
 import ch.mofobo.foodscanner.features.details.gallery.ImageGalleryLayoutManager
 import ch.mofobo.foodscanner.utils.recyclerview.RecyclerViewDividerMarginItemDecoration
 import kotlinx.android.synthetic.main.fragment_details.*
+import kotlinx.android.synthetic.main.fragment_details_scene_details.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.BufferedReader
 import java.io.IOException
@@ -34,7 +40,21 @@ class DetailsFragment : DialogFragment() {
 
     val args: DetailsFragmentArgs by navArgs()
 
+    private var product: Product? = null
+
     private lateinit var imageGalleryAdapter: ImageGalleryAdapter
+
+    private lateinit var sceneProductDetails: Scene
+    private lateinit var sceneLoading: Scene
+    private lateinit var sceneProductNotFound: Scene
+
+    private val currentScene: Scene?
+        get() = Scene.getCurrentScene(scene_container)
+
+    private val animateSceneTransition: Boolean
+        get() = currentScene != null
+
+    private lateinit var fadeTransition: Transition
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(LAYOUT_ID, container, false)
@@ -47,7 +67,7 @@ class DetailsFragment : DialogFragment() {
         prepareView()
         oberveViewModel()
 
-
+        changeScene(sceneLoading)
         val id = if (args.id == -1L) null else args.id
         viewModel.searchProduct(id, args.barcode)
     }
@@ -57,7 +77,10 @@ class DetailsFragment : DialogFragment() {
     }
 
     private fun prepareView() {
-        prepareAdapter()
+        fadeTransition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.fade_out_in_together)
+        sceneLoading = Scene.getSceneForLayout(scene_container, R.layout.fragment_details_scene_loading, requireContext())
+        sceneProductDetails = Scene.getSceneForLayout(scene_container, R.layout.fragment_details_scene_details, requireContext())
+        sceneProductNotFound = Scene.getSceneForLayout(scene_container, R.layout.fragment_details_scene_not_found, requireContext())
     }
 
     private fun prepareAdapter() {
@@ -71,25 +94,77 @@ class DetailsFragment : DialogFragment() {
 
         imageGalleryAdapter = ImageGalleryAdapter()
         image_gallery_rv.adapter = imageGalleryAdapter
-        imageGalleryAdapter.setData(listOf("", "", ""))
+        imageGalleryAdapter.setData(emptyList())
 
     }
 
     private fun oberveViewModel() {
 
         viewModel.product.observe(viewLifecycleOwner, Observer {
-            it?.let { displayProduct(it) }
+            product = it
+            if (product != null) changeScene(sceneProductDetails) else changeScene(sceneProductNotFound)
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+            when (it) {
+                is ProductNotFoundException -> {
+                    if (viewModel.product.value != null) {
+                        Toast.makeText(requireContext(), R.string.exception_product_offline, Toast.LENGTH_LONG).show()
+                    } else {
+                        changeScene(sceneProductNotFound)
+                    }
+                }
+                is ProductSearchException -> {
+                }
+                is NetworkException -> {
+                    if (viewModel.product.value != null) {
+                        Toast.makeText(requireContext(), R.string.exception_product_offline, Toast.LENGTH_LONG).show()
+                    } else {
+                        changeScene(sceneProductNotFound)
+                        Toast.makeText(requireContext(), R.string.exception_no_internet, Toast.LENGTH_LONG).show()
+                    }
+                }
+                is UnknownException -> Toast.makeText(requireContext(), R.string.exception_unknown, Toast.LENGTH_LONG).show()
+            }
+
+
         })
     }
+
+    private fun changeScene(newScene: Scene) {
+        if (newScene == currentScene) return
+
+        when (animateSceneTransition) {
+            true -> TransitionManager.go(newScene, fadeTransition)
+            false -> newScene.enter()
+        }
+
+        when (newScene) {
+            sceneLoading -> initLoadingScene()
+            sceneProductDetails -> initProductDetailsScene()
+            sceneProductNotFound -> initProductNotFoundScene()
+        }
+    }
+
+    private fun initLoadingScene() {
+        if (currentScene != sceneLoading) return
+    }
+
+    private fun initProductDetailsScene() {
+        if (currentScene != sceneProductDetails) return
+        prepareAdapter()
+        displayProduct(product!!)
+    }
+
+    private fun initProductNotFoundScene() {
+        if (currentScene != sceneProductNotFound) return
+    }
+
 
     private fun displayProduct(product: Product) {
         product.let {
 
-            name_tv.text = it.name_translations.getTranslation(DEFAULT_LANG, it.barcode)
+            name_tv.text = it.name_translations.getAnyTranslation(Lang.valueOf(requireContext().getString(R.string.lang)), it.barcode)
 
             imageGalleryAdapter.setData(it.getImages("large"))
 

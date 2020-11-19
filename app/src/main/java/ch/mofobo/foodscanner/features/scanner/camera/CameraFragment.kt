@@ -17,8 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
+import ch.mofobo.foodscanner.MainActivity
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.scanner.camera.analyzer.BarcodeAnalyzer
 import com.google.common.util.concurrent.ListenableFuture
@@ -28,12 +28,20 @@ import java.util.concurrent.Executors
 
 class CameraFragment : DialogFragment() {
 
+    private var isCameraInitialized: Boolean = false
     private lateinit var navController: NavController
 
     private val viewModel: CameraViewModel by viewModel()
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private val cameraExecutor = Executors.newSingleThreadExecutor()
+
+    private lateinit var cameraSelector: CameraSelector
+    private lateinit var preview: Preview
+    private lateinit var imageAnalysis: ImageAnalysis
+
+    val mainActivity: MainActivity
+        get() = requireActivity() as MainActivity
 
     // This is an array of all the permission specified in the manifest.
     private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
@@ -53,21 +61,22 @@ class CameraFragment : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        // requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        if (!allPermissionsGranted()) {
-            requireActivity().requestPermissions(REQUIRED_PERMISSIONS, Companion.REQUEST_CODE_PERMISSIONS)
+        if (mainActivity.cameraPermissionManager.needCameraPermissions()) {
+            mainActivity.cameraPermissionManager.requestCameraPermissions()
+        } else if (isCameraInitialized) {
+            startCamera()
         }
-
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (!mainActivity.cameraPermissionManager.needCameraPermissions()) stopCamera()
+    }
 
     override fun getTheme(): Int {
         return R.style.DialogTheme
     }
 
-    private fun navigateTo(destination: NavDirections) {
-        navController.navigate(destination)
-    }
 
     private fun prepareView() {
     }
@@ -75,15 +84,44 @@ class CameraFragment : DialogFragment() {
     private fun prepareCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            cameraProvider()
-        }
+        cameraProviderFuture.addListener({
+
+            cameraSelector = CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build()
+
+            preview = Preview.Builder().apply {
+                setTargetResolution(Size(previewView.width, previewView.height))
+            }.build()
+
+
+            imageAnalysis = ImageAnalysis.Builder()
+                .setTargetResolution(Size(previewView.width, previewView.height))
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+                .also {
+                    it.setAnalyzer(cameraExecutor, BarcodeAnalyzer { qrResult ->
+                        previewView.post {
+                            qrResult?.let { result ->
+                                viewModel.onBarcodeScanned(result.text)
+                            }
+                        }
+                    })
+                }
+
+            if (!mainActivity.cameraPermissionManager.needCameraPermissions() && !isCameraInitialized) {
+                isCameraInitialized = true
+                startCamera()
+            }
+
+
+        }, ContextCompat.getMainExecutor(requireContext()))
+
     }
 
     private fun oberveViewModel() {
         viewModel.actions.observe(viewLifecycleOwner, Observer {
-            it?.let {
+            it.let {
                 when (it) {
                     is CameraViewModel.Action.SearchBarcode -> navController.navigate(CameraFragmentDirections.actionNavigationToDetails(-1, it.barcode))
                 }
@@ -91,78 +129,33 @@ class CameraFragment : DialogFragment() {
         })
 
 
-        viewModel.text.observe(viewLifecycleOwner, Observer {
+        mainActivity.cameraPermissionManager.cameraPermissionEmitter.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                true -> startCamera()
+                false -> {
+                    Toast.makeText(requireContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
+                    requireActivity().onBackPressed()
+                }
+            }
         })
     }
 
 
-    private fun cameraProvider() {
-        cameraProviderFuture.addListener(Runnable {
-            val cameraProvider = cameraProviderFuture.get()
-            startCamera(cameraProvider)
-        }, ContextCompat.getMainExecutor(requireContext()))
-    }
-
-    private fun startCamera(cameraProvider: ProcessCameraProvider) {
-        val cameraSelector = CameraSelector.Builder()
-            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-            .build()
-
-        val preview = Preview.Builder().apply {
-            setTargetResolution(Size(previewView.width, previewView.height))
-        }.build()
-
-        val imageAnalysis = ImageAnalysis.Builder()
-            .setTargetResolution(Size(previewView.width, previewView.height))
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build()
-            .also {
-                it.setAnalyzer(cameraExecutor, BarcodeAnalyzer { qrResult ->
-                    previewView.post {
-                        qrResult?.let { result ->
-                            viewModel.onBarcodeScanned(result.text)
-                        }
-                    }
-                })
-            }
-
+    private fun startCamera() {
+        val cameraProvider = cameraProviderFuture.get()
         cameraProvider.unbindAll()
-
         val camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis)
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.cameraInfo))
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                cameraProvider()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Permissions not granted by the user.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                // finish()
-            }
-        }
-    }
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+    private fun stopCamera() {
+        val cameraProvider = cameraProviderFuture.get()
+        cameraProvider.unbindAll()
     }
 
     companion object {
         @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_camera
-
-        // This is an arbitrary number we are using to keep track of the permission
-        // request. Where an app has multiple context for requesting permission,
-        // this can help differentiate the different contexts.
-        private const val REQUEST_CODE_PERMISSIONS = 10
     }
 
 }

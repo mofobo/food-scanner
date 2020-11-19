@@ -50,7 +50,6 @@ class BarcodeAnalyzer(private val onQrCodesDetected: (qrCode: Result?) -> Unit) 
             val result = reader.decode(binaryBitmap)
             onQrCodesDetected(result)
         } catch (e: NotFoundException) {
-            e.printStackTrace()
         }
         image.close()
     }

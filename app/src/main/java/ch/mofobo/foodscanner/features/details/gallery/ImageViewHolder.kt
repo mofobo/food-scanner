@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import ch.mofobo.foodscanner.R
-import com.squareup.picasso.Picasso
+import ch.mofobo.foodscanner.utils.Dali
 import kotlinx.android.synthetic.main.fragment_details_image_view_holder.view.*
 
 class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(url: String) {
-        if (!url.isNullOrBlank()) Picasso.get().load(url).into(itemView.image)
+        if (!url.isNullOrBlank()) Dali.get().load(url).into(itemView.image)
     }
 
     companion object {

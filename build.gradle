@@ -20,8 +20,6 @@ buildscript {
     ext.lottie_version = '3.3.1'
     // Zxing
     ext.zxing_version = '3.4.0'
-    // Picasso
-    ext.picasso_version = '2.71828'
 
     repositories {
         google()
