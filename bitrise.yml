@@ -1,128 +1,136 @@
 ---
 format_version: '8'
-default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+default_step_lib_source: 'https://github.com/bitrise-io/bitrise-steplib.git'
 project_type: android
 trigger_map:
-- push_branch: "*"
-  workflow: primary
-- push_branch: release_*
-  workflow: release
-- pull_request_source_branch: "*"
-  workflow: primary
+  - push_branch: release_*
+    workflow: release
+  - push_branch: '*'
+    workflow: primary
+  - pull_request_source_branch: '*'
+    workflow: primary
 workflows:
   primary:
     steps:
-    - activate-ssh-key@4:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    - git-clone@4: {}
-    - cache-pull@2: {}
-    - script@1:
-        title: Do anything with Script step
-    - install-missing-android-tools@2:
-        inputs:
-        - gradlew_path: "$PROJECT_LOCATION/gradlew"
-    - android-lint@0:
-        inputs:
-        - project_location: "$PROJECT_LOCATION"
-        - module: "$MODULE"
-        - variant: "$VARIANT"
-    - android-unit-test@1:
-        inputs:
-        - project_location: "$PROJECT_LOCATION"
-        - module: "$MODULE"
-        - variant: "$VARIANT"
-    - android-build@0.10:
-        inputs:
-        - variant: dvDebug
-        title: Build devDebug APK
-    - android-build@0:
-        title: Build testDebug APK
-        inputs:
-        - variant: tstDebug
-    - android-build@0:
-        title: Build intDebug APK
-        inputs:
-        - variant: ntgDebug
-    - deploy-to-bitrise-io@1:
-        inputs:
-        - notify_user_groups: none
-    - cache-push@2: {}
+      - activate-ssh-key@4:
+          run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+      - git-clone@4: {}
+      - cache-pull@2: {}
+      - script@1:
+          title: Do anything with Script step
+      - install-missing-android-tools@2:
+          inputs:
+            - gradlew_path: $PROJECT_LOCATION/gradlew
+      - android-lint@0:
+          inputs:
+            - project_location: $PROJECT_LOCATION
+            - module: $MODULE
+            - variant: $VARIANT
+      - android-unit-test@1:
+          inputs:
+            - project_location: $PROJECT_LOCATION
+            - module: $MODULE
+            - variant: $VARIANT
+      - android-build@0.10:
+          inputs:
+            - variant: dvDebug
+          title: Build devDebug APK
+      - android-build@0:
+          title: Build testDebug APK
+          inputs:
+            - variant: tstDebug
+      - android-build@0:
+          title: Build intDebug APK
+          inputs:
+            - variant: ntgDebug
+      - deploy-to-bitrise-io@1:
+          inputs:
+            - notify_user_groups: none
+      - cache-push@2: {}
   release:
     steps:
-    - activate-ssh-key@4.0.5:
-        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
-    - git-clone: {}
-    - cache-pull@2.1.4: {}
-    - install-missing-android-tools@2.3.8:
-        inputs:
-        - gradlew_path: "$PROJECT_LOCATION/gradlew"
-    - android-lint@0.9.7:
-        inputs:
-        - project_location: "$PROJECT_LOCATION"
-        - variant: ntgRelease
-        - module: "$MODULE"
-    - android-unit-test@1.0:
-        inputs:
-        - project_location: "$PROJECT_LOCATION"
-        - variant: ntgRelease
-        - module: "$MODULE"
-    - android-build:
-        title: Build devDebug APK
-        inputs:
-        - app_path_pattern: "*/build/outputs/apk/*.apk"
-        - variant: dvDebug
-    - android-build:
-        title: Build testDebug APK
-        inputs:
-        - app_path_pattern: "*/build/outputs/apk/*.apk"
-        - variant: tstDebug
-    - android-build@0.10:
-        title: Build intDebug  APK
-        inputs:
-        - app_path_pattern: "*/build/outputs/apk/*.apk"
-        - variant: ntgDebug
-    - android-build:
-        title: Build prodRelease AAB
-        inputs:
-        - build_type: aab
-        - variant: prdRelease
-    - google-play-deploy@3.0.2:
-        inputs:
-        - package_name: ch.mofobo.foodscanner
-        - app_path: "/bitrise/deploy/app-prod-release.aab"
-        - track: internal
-        - service_account_json_key_path: "$BITRISEIO_GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_URL"
-        title: Deploy Prod AAB to Google Play (internal test track)
-    - slack@3.1.3:
-        inputs:
-        - channel: "#release_android"
-        - text: "\U0001F389"
-        - icon_url: https://koenig-media.raywenderlich.com/uploads/2018/03/AndroidAvalanche-3.png
-        - from_username: Android Team
-        - pretext: "*NEUER ANDROID RELEASE!*"
-        - buttons: Install Page|${BITRISE_PUBLIC_INSTALL_PAGE_URL}
-        - message: |-
-            $GIT_CLONE_COMMIT_MESSAGE_BODY
-              - Die PROD Version ist im öffentlichen Play Store via Track 'Interner Test' verfügbar (für die Gruppe 'BLS Mobil - INT Tester')
-        - fields: ''
-        - webhook_url: "$BITRISE_SLACK_INCOMING_WEBHOOK"
-        - api_token: ''
-    - deploy-to-bitrise-io:
-        inputs:
-        - notify_email_list: ''
-        - notify_user_groups: none
-        title: Deliver to Bitrise.io - Apps, Logs, Artifacts
-    - cache-push: {}
-    description: This workflow is intended to produce deployable INT and PROD artifacts
-      for productive deployment.
+      - activate-ssh-key@4.0.5:
+          run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+      - git-clone: {}
+      - cache-pull@2.1.4: {}
+      - install-missing-android-tools@2.3.8:
+          inputs:
+            - gradlew_path: $PROJECT_LOCATION/gradlew
+      - android-lint@0.9.7:
+          inputs:
+            - project_location: $PROJECT_LOCATION
+            - variant: ntgRelease
+            - module: $MODULE
+      - android-unit-test@1.0:
+          inputs:
+            - project_location: $PROJECT_LOCATION
+            - variant: ntgRelease
+            - module: $MODULE
+      - android-build:
+          title: Build devDebug APK
+          inputs:
+            - app_path_pattern: '*/build/outputs/apk/*.apk'
+            - variant: dvDebug
+      - android-build:
+          title: Build testDebug APK
+          inputs:
+            - app_path_pattern: '*/build/outputs/apk/*.apk'
+            - variant: tstDebug
+      - android-build@0.10:
+          title: Build intDebug  APK
+          inputs:
+            - app_path_pattern: '*/build/outputs/apk/*.apk'
+            - variant: ntgDebug
+      - android-build:
+          title: Build prodRelease APK
+          inputs:
+            - build_type: apk
+            - variant: prdRelease
+      - android-build:
+          title: Build prodRelease AAB
+          inputs:
+            - build_type: aab
+            - variant: prdRelease
+      - sign-apk@1: {}
+      - google-play-deploy@3.0.2:
+          inputs:
+            - package_name: ch.mofobo.foodscanner
+            - app_path: /bitrise/deploy/app-prod-release.aab
+            - track: internal
+            - service_account_json_key_path: $BITRISEIO_GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_URL
+          title: Deploy Prod AAB to Google Play (internal test track)
+      - slack@3.1.3:
+          inputs:
+            - channel: '#release_android'
+            - text: "\U0001F389"
+            - icon_url: >-
+                https://koenig-media.raywenderlich.com/uploads/2018/03/AndroidAvalanche-3.png
+            - from_username: Android Team
+            - pretext: '*NEUER ANDROID RELEASE!*'
+            - buttons: 'Install Page|${BITRISE_PUBLIC_INSTALL_PAGE_URL}'
+            - message: |-
+                $GIT_CLONE_COMMIT_MESSAGE_BODY
+                  - Die PROD Version ist im öffentlichen Play Store via Track 'Interner Test' verfügbar (für die Gruppe 'BLS Mobil - INT Tester')
+            - fields: ''
+            - webhook_url: $BITRISE_SLACK_INCOMING_WEBHOOK
+            - api_token: ''
+      - deploy-to-bitrise-io:
+          inputs:
+            - notify_email_list: ''
+            - notify_user_groups: none
+          title: 'Deliver to Bitrise.io - Apps, Logs, Artifacts'
+      - cache-push: {}
+    description: >-
+      This workflow is intended to produce deployable INT and PROD artifacts for
+      productive deployment.
 app:
   envs:
-  - opts:
-      is_expand: false
-    PROJECT_LOCATION: "."
-  - opts:
-      is_expand: false
-    MODULE: app
-  - opts:
-      is_expand: false
-    VARIANT: prdRelease
+    - opts:
+        is_expand: false
+      PROJECT_LOCATION: .
+    - opts:
+        is_expand: false
+      MODULE: app
+    - opts:
+        is_expand: false
+      VARIANT: prdRelease
