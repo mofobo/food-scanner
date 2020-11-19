@@ -38,7 +38,7 @@ android {
         def FOODREPO_API_KEY = "FOODREPO_API_KEY"
         def VERSION = defaultConfig.versionName
 
-        dev {
+        dv {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner.dev"
 
@@ -49,7 +49,7 @@ android {
             dimension "default"
         }
 
-        test {
+        tst {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner.test"
 
@@ -60,7 +60,7 @@ android {
             dimension "default"
         }
 
-        integ {
+        ntg {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner.integ"
 
@@ -71,7 +71,7 @@ android {
             dimension "default"
         }
 
-        prod {
+        prd {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner"
 
