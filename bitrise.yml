@@ -3,7 +3,7 @@ format_version: '8'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: android
 trigger_map:
-- push_branch: "*"
+- push_branch: "develop"
   workflow: primary
 - push_branch: release_*
   workflow: release
@@ -31,18 +31,6 @@ workflows:
         - project_location: "$PROJECT_LOCATION"
         - module: "$MODULE"
         - variant: "$VARIANT"
-    - android-build@0.10:
-        inputs:
-        - variant: dvDebug
-        title: Build devDebug APK
-    - android-build@0:
-        title: Build testDebug APK
-        inputs:
-        - variant: tstDebug
-    - android-build@0:
-        title: Build intDebug APK
-        inputs:
-        - variant: ntgDebug
     - deploy-to-bitrise-io@1:
         inputs:
         - notify_user_groups: none
