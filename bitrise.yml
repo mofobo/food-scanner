@@ -91,7 +91,9 @@ workflows:
           inputs:
             - build_type: aab
             - variant: prdRelease
-      - sign-apk@1: {}
+      - sign-apk@1:
+          inputs:
+            - signer_scheme: v2
       - google-play-deploy@3.0.2:
           inputs:
             - package_name: ch.mofobo.foodscanner
@@ -134,4 +136,3 @@ app:
     - opts:
         is_expand: false
       VARIANT: prdRelease
-      
