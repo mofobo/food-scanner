@@ -91,16 +91,6 @@ workflows:
           inputs:
             - build_type: aab
             - variant: prdRelease
-      - sign-apk@1:
-          inputs:
-            - signer_scheme: v3
-      - google-play-deploy@3.0.2:
-          inputs:
-            - package_name: ch.mofobo.foodscanner
-            - app_path: /bitrise/deploy/app-prod-release.aab
-            - track: internal
-            - service_account_json_key_path: $BITRISEIO_GOOGLE_PLAY_SERVICE_ACCOUNT_KEY_URL
-          title: Deploy Prod AAB to Google Play (internal test track)
       - slack@3.1.3:
           inputs:
             - channel: '#release_android'
