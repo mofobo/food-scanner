@@ -1,5 +1,7 @@
 package ch.mofobo.foodscanner
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
