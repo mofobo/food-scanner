@@ -19,9 +19,6 @@ data class Product(
     val created_at: String,
     val updated_at: String
 ) {
-    val isImageAvailable: Boolean
-        get() = images.any { it.isImageAvailable }
-
     fun getImages(size: String): List<String> {
         val imageList = mutableListOf<String>()
         images.forEach {

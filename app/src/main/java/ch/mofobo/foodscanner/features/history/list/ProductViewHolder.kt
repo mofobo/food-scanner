@@ -24,12 +24,6 @@ class ProductViewHolder(itemView: View, private val itemClickConsumer: Consumer<
         itemView.setOnClickListener { itemClickConsumer.accept(product) }
     }
 
-
-    private fun loadImage() {
-
-    }
-
-
     companion object {
         @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_history_product_view_holder
