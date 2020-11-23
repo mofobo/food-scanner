@@ -7,12 +7,13 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.utils.Dali
+import ch.mofobo.foodscanner.utils.loadUrl
 import kotlinx.android.synthetic.main.fragment_details_image_view_holder.view.*
 
 class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(url: String) {
-        if (!url.isNullOrBlank()) Dali.get().load(url).into(itemView.image)
+        itemView.image.loadUrl(url)
     }
 
     companion object {
