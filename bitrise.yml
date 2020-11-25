@@ -5,7 +5,7 @@ project_type: android
 trigger_map:
   - push_branch: release_*
     workflow: release
-  - push_branch: 'develop'
+  - push_branch: develop
     workflow: primary
   - pull_request_source_branch: '*'
     workflow: primary
@@ -56,6 +56,9 @@ workflows:
       - install-missing-android-tools@2.3.8:
           inputs:
             - gradlew_path: $PROJECT_LOCATION/gradlew
+      - change-android-versioncode-and-versionname@1:
+          inputs:
+            - version_code_offset: '-58'
       - android-lint@0.9.7:
           inputs:
             - project_location: $PROJECT_LOCATION

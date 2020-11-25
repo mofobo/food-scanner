@@ -35,7 +35,7 @@ class DetailsViewModel(
                     val remoteProduct = when {
                         id != null -> productRepository.fetchProduct(id)
                         barcode != null -> productRepository.fetchProduct(barcode)
-                        else -> throw BaseException.ProductSearchException
+                        else -> throw BaseException.ProductSearchException("no information")
                     }
 
                     productRepository.add(remoteProduct)
@@ -44,9 +44,8 @@ class DetailsViewModel(
                 } catch (e: BaseException) {
                     error.postValue(e)
                 }
-
             } else {
-                error.postValue(BaseException.NetworkException)
+                error.postValue(BaseException.NetworkException(barcode ?: id?.toString() ?: "no information"))
             }
 
         }

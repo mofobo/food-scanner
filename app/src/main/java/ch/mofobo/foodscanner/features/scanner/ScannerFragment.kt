@@ -1,5 +1,6 @@
 package ch.mofobo.foodscanner.features.scanner
 
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +20,7 @@ import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.common.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class ScannerFragment : Fragment() {
 
@@ -79,10 +81,22 @@ class ScannerFragment : Fragment() {
                 navigateToCamera()
             }
         }
+
+        setVersion()
     }
 
-    private fun navigateToCamera()
-    {
+    private fun setVersion() {
+        val packageInfo: PackageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            packageInfo.longVersionCode
+        } else {
+            packageInfo.versionCode
+        }
+        val versionName = packageInfo.versionName
+        version.text = "v. $versionName ($versionCode)"
+    }
+
+    private fun navigateToCamera() {
         navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
         resetBarcodeManualInput()
     }

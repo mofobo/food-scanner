@@ -16,7 +16,7 @@ class RemoteProductDataSourceImpl(private val remoteProductService: RemoteProduc
             if (it.isSuccessful) it.body()?.let { it.product?.let { return it } }
         }
 
-        throw BaseException.ProductNotFoundException
+        throw BaseException.ProductNotFoundException(id.toString())
     }
 
     override suspend fun fetchProduct(barcode: String): Product {
@@ -29,6 +29,6 @@ class RemoteProductDataSourceImpl(private val remoteProductService: RemoteProduc
             if (it.isSuccessful) it.body()?.let { it.product?.let { return it } }
         }
 
-        throw BaseException.ProductNotFoundException
+        throw BaseException.ProductNotFoundException(barcode)
     }
 }

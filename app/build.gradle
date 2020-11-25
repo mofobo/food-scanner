@@ -14,8 +14,8 @@ android {
 
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.target_sdk_version
-        versionName "1.0.2"
-        versionCode 3
+        versionName "1.0.3"
+        versionCode 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -99,7 +99,7 @@ android {
             versionName "$VERSION"
             applicationId "ch.mofobo.foodscanner"
 
-            resValue "string", "flavored_app_name", "FoodScanner Dev"
+            resValue "string", "flavored_app_name", "FoodScanner"
             buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
             buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
 

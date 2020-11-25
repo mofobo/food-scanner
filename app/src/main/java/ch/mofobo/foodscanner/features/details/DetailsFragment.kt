@@ -18,6 +18,7 @@ import androidx.transition.TransitionInflater
 import androidx.transition.TransitionManager
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.common.StringUtils
+import ch.mofobo.foodscanner.domain.exception.BaseException
 import ch.mofobo.foodscanner.domain.exception.BaseException.*
 import ch.mofobo.foodscanner.domain.model.Lang
 import ch.mofobo.foodscanner.domain.model.NutrientInfo
@@ -27,6 +28,7 @@ import ch.mofobo.foodscanner.features.details.gallery.ImageGalleryLayoutManager
 import ch.mofobo.foodscanner.utils.recyclerview.RecyclerViewDividerMarginItemDecoration
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_details_scene_details.*
+import kotlinx.android.synthetic.main.fragment_details_scene_not_found.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.BufferedReader
 import java.io.IOException
@@ -72,15 +74,11 @@ class DetailsFragment : DialogFragment() {
         viewModel.searchProduct(id, args.barcode)
     }
 
-    private fun navigateTo(destination: Int) {
-        navController.navigate(destination)
-    }
-
     private fun prepareView() {
         fadeTransition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.fade_out_in_together)
-        sceneLoading = Scene.getSceneForLayout(scene_container, R.layout.fragment_details_scene_loading, requireContext())
-        sceneProductDetails = Scene.getSceneForLayout(scene_container, R.layout.fragment_details_scene_details, requireContext())
-        sceneProductNotFound = Scene.getSceneForLayout(scene_container, R.layout.fragment_details_scene_not_found, requireContext())
+        sceneLoading = Scene.getSceneForLayout(scene_container, LAYOUT_SCENE_LOADING_ID, requireContext())
+        sceneProductDetails = Scene.getSceneForLayout(scene_container, LAYOUT_SCENE_DETAILS_ID, requireContext())
+        sceneProductNotFound = Scene.getSceneForLayout(scene_container, LAYOUT_SCENE_NOT_FOUND_ID, requireContext())
     }
 
     private fun prepareAdapter() {
@@ -158,6 +156,8 @@ class DetailsFragment : DialogFragment() {
 
     private fun initProductNotFoundScene() {
         if (currentScene != sceneProductNotFound) return
+
+        barcode.text = (viewModel.error.value as BaseException).barcode
     }
 
 
@@ -301,6 +301,15 @@ class DetailsFragment : DialogFragment() {
 
         @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_details
+
+        @LayoutRes
+        private const val LAYOUT_SCENE_LOADING_ID = R.layout.fragment_details_scene_loading
+
+        @LayoutRes
+        private const val LAYOUT_SCENE_DETAILS_ID = R.layout.fragment_details_scene_details
+
+        @LayoutRes
+        private const val LAYOUT_SCENE_NOT_FOUND_ID = R.layout.fragment_details_scene_not_found
     }
 
 }
