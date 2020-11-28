@@ -53,8 +53,8 @@ private fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
             var readTimeout: Int = chain.readTimeoutMillis()
             var writeTimeout: Int = chain.writeTimeoutMillis()
             val connectNew: String? = request.header(CONNECT_TIMEOUT)
-            val readNew: String?= request.header(READ_TIMEOUT)
-            val writeNew: String?= request.header(WRITE_TIMEOUT)
+            val readNew: String? = request.header(READ_TIMEOUT)
+            val writeNew: String? = request.header(WRITE_TIMEOUT)
             if (!TextUtils.isEmpty(connectNew)) {
                 connectTimeout = Integer.valueOf(connectNew)
             }
@@ -83,9 +83,48 @@ private fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
         .addInterceptor(foodRepoAuthenticationInterceptor)
         .addInterceptor(loggingInterceptor)
         .build()
-} else OkHttpClient
-    .Builder()
-    .build()
+} else {
+    val loggingInterceptor = HttpLoggingInterceptor()
+    val foodRepoAuthenticationInterceptor = FoodRepoAuthenticationInterceptor()
+
+    val timeoutInterceptor: Interceptor = object : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request: Request = chain.request()
+            var connectTimeout: Int = chain.connectTimeoutMillis()
+            var readTimeout: Int = chain.readTimeoutMillis()
+            var writeTimeout: Int = chain.writeTimeoutMillis()
+            val connectNew: String? = request.header(CONNECT_TIMEOUT)
+            val readNew: String? = request.header(READ_TIMEOUT)
+            val writeNew: String? = request.header(WRITE_TIMEOUT)
+            if (!TextUtils.isEmpty(connectNew)) {
+                connectTimeout = Integer.valueOf(connectNew)
+            }
+            if (!TextUtils.isEmpty(readNew)) {
+                readTimeout = Integer.valueOf(readNew)
+            }
+            if (!TextUtils.isEmpty(writeNew)) {
+                writeTimeout = Integer.valueOf(writeNew)
+            }
+            return chain
+                .withConnectTimeout(connectTimeout, TimeUnit.MILLISECONDS)
+                .withReadTimeout(readTimeout, TimeUnit.MILLISECONDS)
+                .withWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS)
+                .proceed(request)
+        }
+    }
+
+
+
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+    OkHttpClient.Builder()
+        .connectTimeout(10000, TimeUnit.MILLISECONDS)
+        .writeTimeout(15000, TimeUnit.MILLISECONDS)
+        .readTimeout(5000, TimeUnit.MILLISECONDS)
+        .addInterceptor(timeoutInterceptor)
+        .addInterceptor(foodRepoAuthenticationInterceptor)
+        .addInterceptor(loggingInterceptor)
+        .build()
+}
 
 private fun provideNetworkHelper(context: Context) = NetworkHelper(context)
 
