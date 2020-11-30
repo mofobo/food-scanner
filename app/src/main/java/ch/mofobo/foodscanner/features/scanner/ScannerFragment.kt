@@ -1,20 +1,26 @@
 package ch.mofobo.foodscanner.features.scanner
 
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import ch.mofobo.foodscanner.MainActivity
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.common.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class ScannerFragment : Fragment() {
 
@@ -23,6 +29,10 @@ class ScannerFragment : Fragment() {
     private val viewModel: ScannerViewModel by viewModel()
 
     private lateinit var sharedViewModel: SharedViewModel
+
+    val mainActivity: MainActivity
+        get() = requireActivity() as MainActivity
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(LAYOUT_ID, container, false)
@@ -42,14 +52,9 @@ class ScannerFragment : Fragment() {
         clear_btn.isEnabled = sharedViewModel.barcode.length != 0
         search_btn.isEnabled = sharedViewModel.barcode.length != 0
 
-        clear_btn.setOnClickListener { resetBarcodeManualInput()}
+        clear_btn.setOnClickListener { resetBarcodeManualInput() }
         search_btn.setOnClickListener {
             navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
-            resetBarcodeManualInput()
-        }
-
-        scan_btn.setOnClickListener {
-            navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
             resetBarcodeManualInput()
         }
 
@@ -67,8 +72,39 @@ class ScannerFragment : Fragment() {
                     search_btn.isEnabled = isTextAvailable
                 }
             })
+
+        scan_btn.isEnabled = hasCameraHardware()
+        scan_btn.setOnClickListener {
+            if (mainActivity.cameraPermissionManager.needCameraPermissions()) {
+                mainActivity.cameraPermissionManager.requestCameraPermissions()
+            } else {
+                navigateToCamera()
+            }
+        }
+
+        setVersion()
     }
 
+    private fun setVersion() {
+        val packageInfo: PackageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            packageInfo.longVersionCode
+        } else {
+            packageInfo.versionCode
+        }
+        val versionName = packageInfo.versionName
+        version.text = "v. $versionName ($versionCode)"
+    }
+
+    private fun navigateToCamera() {
+        navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
+        resetBarcodeManualInput()
+    }
+
+    /** Check if this device has a camera */
+    private fun hasCameraHardware(): Boolean {
+        return requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)
+    }
 
     fun resetBarcodeManualInput() {
         sharedViewModel.barcode = ""
@@ -76,6 +112,14 @@ class ScannerFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        mainActivity.cameraPermissionManager.cameraPermissionEmitter.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                true -> navigateToCamera()
+                false -> {
+                    Toast.makeText(requireContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 
     companion object {

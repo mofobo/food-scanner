@@ -5,8 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
+    app:layout_behavior="@string/nav_app_bar_navigate_up_description"
     tools:context="ch.mofobo.foodscanner.features.scanner.ScannerFragment">
 
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_information"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/input_container"
@@ -15,7 +24,7 @@
         app:layout_constraintBottom_toTopOf="@id/or_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info"
         app:layout_constraintVertical_chainStyle="spread">
 
 
@@ -82,10 +91,18 @@
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:inputType="text"
         android:text="Scan barcode"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/version"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/or_label" />
 
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="v. 1.2.3 (142)" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
