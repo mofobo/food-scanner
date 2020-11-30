@@ -1,10 +1,10 @@
 package ch.mofobo.foodscanner.features.scanner.camera
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Size
 import android.view.LayoutInflater
+import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -101,9 +101,11 @@ class CameraFragment : DialogFragment() {
                 .build()
                 .also {
                     it.setAnalyzer(cameraExecutor, BarcodeAnalyzer { qrResult ->
-                        previewView.post {
-                            qrResult?.let { result ->
-                                viewModel.onBarcodeScanned(result.text)
+                        previewView?.let {
+                            it.post {
+                                qrResult?.let { result ->
+                                    viewModel.onBarcodeScanned(result.text)
+                                }
                             }
                         }
                     })
