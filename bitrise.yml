@@ -70,21 +70,6 @@ workflows:
             - variant: ntgRelease
             - module: $MODULE
       - android-build:
-          title: Build devDebug APK
-          inputs:
-            - app_path_pattern: '*/build/outputs/apk/*.apk'
-            - variant: dvDebug
-      - android-build:
-          title: Build testDebug APK
-          inputs:
-            - app_path_pattern: '*/build/outputs/apk/*.apk'
-            - variant: tstDebug
-      - android-build@0.10:
-          title: Build intDebug  APK
-          inputs:
-            - app_path_pattern: '*/build/outputs/apk/*.apk'
-            - variant: ntgDebug
-      - android-build:
           title: Build prodRelease APK
           inputs:
             - build_type: apk
