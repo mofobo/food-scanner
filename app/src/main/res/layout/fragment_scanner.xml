@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     app:layout_behavior="@string/nav_app_bar_navigate_up_description"
+    android:background="@color/background"
     tools:context="ch.mofobo.foodscanner.features.scanner.ScannerFragment">
 
     <ImageView
