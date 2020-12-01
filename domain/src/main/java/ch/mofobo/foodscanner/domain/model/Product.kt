@@ -33,4 +33,8 @@ data class Product(
         }
         return imageList
     }
+
+    fun isSameAs(product: Product?): Boolean {
+        return product != null && product.id == id
+    }
 }
