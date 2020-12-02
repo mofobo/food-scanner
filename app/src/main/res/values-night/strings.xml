@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="exception_product_offline">Those informations may not be up to date!</string>
-    <string name="product_not_found">Product not found</string>
-</resources>
