@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import ch.mofobo.foodscanner.BuildConfig
 import ch.mofobo.foodscanner.MainActivity
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.common.SharedViewModel
@@ -108,13 +109,16 @@ class ScannerFragment : Fragment() {
 
     private fun setVersion() {
         val packageInfo: PackageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
+
         val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
             packageInfo.longVersionCode
         } else {
             packageInfo.versionCode
         }
-        val versionName = packageInfo.versionName
-        version.text = "v. $versionName ($versionCode)"
+
+        val environment = BuildConfig.ENVIRONMENT
+
+        version.text = "v. ${packageInfo.versionName} ($versionCode)${if (environment.isNullOrBlank()) "" else " - $environment"}"
     }
 
     private fun navigateToCamera() {

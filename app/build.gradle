@@ -18,28 +18,15 @@ android {
         versionCode 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-//    signingConfigs {
-//        debug {
-//            storeFile file("key/debug.keystore")
-//            storePassword '2rswRYtGL6/='
-//            keyAlias 'foodscanner_debug_key'
-//            keyPassword '(49tYGW$eiU,'
-//        }
-//        release {
-//            storeFile file("key/release.keystore")
-//            storePassword 'EZTQudGoC+</'
-//            keyAlias 'foodscanner_release_key'
-//            keyPassword 'UJ]7p8KEF9|:'
-//        }
-//    }
+        buildConfigField "String", "FOODREPO_BASE_URL", '"https://www.foodrepo.org/api/v3/"'
+        buildConfigField "String", "FOODREPO_API_KEY", '"ce074d72db16f2927095a70a09c37f37"'
+    }
 
     buildTypes {
         debug {
             debuggable true
             minifyEnabled false
-            //signingConfig signingConfigs.debug
         }
 
         release {
@@ -47,62 +34,32 @@ android {
             shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //signingConfig signingConfigs.release
         }
     }
 
     flavorDimensions "default"
 
     productFlavors {
-        def STRING = "String"
-        def BOOLEAN = "boolean"
-        def INT = "int"
-
-        def FOODREPO_BASE_URL = "FOODREPO_BASE_URL"
-        def FOODREPO_API_KEY = "FOODREPO_API_KEY"
-        def VERSION = defaultConfig.versionName
-
         dv {
-            versionName "$VERSION"
-            applicationId "ch.mofobo.foodscanner.dev"
-
-            resValue "string", "flavored_app_name", "FoodScanner Dev"
-            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
-            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
-
+            buildConfigField "String", "ENVIRONMENT", '"dev"'
+            applicationIdSuffix ".dev"
             dimension "default"
         }
 
         tst {
-            versionName "$VERSION"
-            applicationId "ch.mofobo.foodscanner.test"
-
-            resValue "string", "flavored_app_name", "FoodScanner Test"
-            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
-            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
-
+            buildConfigField "String", "ENVIRONMENT", '"test"'
+            applicationIdSuffix ".test"
             dimension "default"
         }
 
         ntg {
-            versionName "$VERSION"
-            applicationId "ch.mofobo.foodscanner.integ"
-
-            resValue "string", "flavored_app_name", "FoodScanner Integ"
-            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
-            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
-
+            buildConfigField "String", "ENVIRONMENT", '"integ"'
+            applicationIdSuffix ".integ"
             dimension "default"
         }
 
         prd {
-            versionName "$VERSION"
-            applicationId "ch.mofobo.foodscanner"
-
-            resValue "string", "flavored_app_name", "FoodScanner"
-            buildConfigField STRING, FOODREPO_BASE_URL, '"https://www.foodrepo.org/api/v3/"'
-            buildConfigField STRING, FOODREPO_API_KEY, '"ce074d72db16f2927095a70a09c37f37"'
-
+            buildConfigField "String", "ENVIRONMENT", '""'
             dimension "default"
         }
 
