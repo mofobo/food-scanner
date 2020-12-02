@@ -18,6 +18,7 @@ import androidx.navigation.findNavController
 import ch.mofobo.foodscanner.MainActivity
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.common.SharedViewModel
+import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -45,6 +46,7 @@ class ScannerFragment : Fragment() {
 
         navController = view.findNavController()
         prepareView()
+        prepareAds()
         observeViewModel()
     }
 
@@ -83,6 +85,11 @@ class ScannerFragment : Fragment() {
         }
 
         setVersion()
+    }
+
+    private fun prepareAds() {
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
     }
 
     private fun setVersion() {

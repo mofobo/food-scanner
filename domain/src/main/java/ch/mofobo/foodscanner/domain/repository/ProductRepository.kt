@@ -10,6 +10,8 @@ interface ProductRepository {
 
     suspend fun add(product: Product)
 
+    suspend fun add(product: Product, position: Int)
+
     suspend fun get(id: Long?, barcode: String?): Product?
 
     suspend fun getAll(): List<Product>

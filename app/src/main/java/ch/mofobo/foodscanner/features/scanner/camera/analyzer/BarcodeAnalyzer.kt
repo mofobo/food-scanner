@@ -10,6 +10,7 @@ import java.nio.ByteBuffer
 
 class BarcodeAnalyzer(private val onQrCodesDetected: (qrCode: Result?) -> Unit) : ImageAnalysis.Analyzer {
 
+    // extensions
     private fun ByteBuffer.toByteArray(): ByteArray {
         rewind()
         val data = ByteArray(remaining())

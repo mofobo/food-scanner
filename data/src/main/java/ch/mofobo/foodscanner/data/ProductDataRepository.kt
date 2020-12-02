@@ -16,6 +16,8 @@ class ProductDataRepository constructor(
 
     override suspend fun add(product: Product) = localeProductDataSource.add(product)
 
+    override suspend fun add(product: Product, position: Int) = localeProductDataSource.add(product, position)
+
     override suspend fun get(id: Long?, barcode: String?): Product? = localeProductDataSource.get(id, barcode)
 
     override suspend fun getAll(): List<Product> = localeProductDataSource.getAll()

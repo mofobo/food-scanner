@@ -21,7 +21,7 @@ class HistoryViewModel(val productRepository: ProductRepository) : ViewModel() {
         coroutineScope.launch {
             try {
                 val localProducts = productRepository.getAll()
-                products.postValue(localProducts)
+                products.postValue(localProducts.asReversed())
             } catch (e: Exception) {
                 error.postValue(Throwable(e.message ?: "No message?"))
             }
@@ -31,5 +31,29 @@ class HistoryViewModel(val productRepository: ProductRepository) : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun removeProduct(product: Product) {
+        coroutineScope.launch {
+            try {
+                productRepository.remove(product)
+                val localProducts = productRepository.getAll()
+                products.postValue(localProducts.asReversed())
+            } catch (e: Exception) {
+                error.postValue(Throwable(e.message ?: "Error removing product?"))
+            }
+        }
+    }
+
+    fun addProduct(product: Product, position: Int) {
+        coroutineScope.launch {
+            try {
+                productRepository.add(product, position)
+                val localProducts = productRepository.getAll()
+                products.postValue(localProducts.asReversed())
+            } catch (e: Exception) {
+                error.postValue(Throwable(e.message ?: "Error adding product"))
+            }
+        }
     }
 }

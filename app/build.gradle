@@ -14,7 +14,7 @@ android {
 
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.target_sdk_version
-        versionName "1.1.1"
+        versionName "1.2.1"
         versionCode 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -177,6 +177,9 @@ dependencies {
 
     // Cardview
     implementation 'androidx.cardview:cardview:1.0.0'
-    
+
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    // Ad Mob
+    implementation 'com.google.android.gms:play-services-ads:19.5.0'
 }

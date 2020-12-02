@@ -26,6 +26,13 @@ class LocaleProductDataSourceImpl constructor(context: Context) : LocaleProductD
         persist(products)
     }
 
+    override suspend fun add(product: Product, position: Int) {
+        val products = getAll().toMutableList()
+        products.remove(product)
+        products.add(position, product)
+        persist(products)
+    }
+
     override suspend fun get(id: Long?, barcode: String?): Product? {
         val products = getAll().toMutableList()
         return products.firstOrNull { it.id == id || it.barcode == barcode }

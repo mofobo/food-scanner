@@ -75,6 +75,10 @@ class DetailsFragment : DialogFragment() {
     }
 
     private fun prepareView() {
+
+        toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        toolbar.title = requireContext().getString(R.string.global_result)
+
         fadeTransition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.fade_out_in_together)
         sceneLoading = Scene.getSceneForLayout(scene_container, LAYOUT_SCENE_LOADING_ID, requireContext())
         sceneProductDetails = Scene.getSceneForLayout(scene_container, LAYOUT_SCENE_DETAILS_ID, requireContext())
