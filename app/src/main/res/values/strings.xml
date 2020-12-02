@@ -31,4 +31,5 @@
     <string name="scanner_search_action">"Search"</string>
     <string name="scanner_scan_action">"Scan barcode"</string>
     <string name="scanner_clear_action">"Clear"</string>
+    <string name="about_us_message">"This application allows you to scan a product's barcode and retrieve some details such as nutritional values, ingredients, and product pictures. The data source of FoodScanner is The Open Food Repo service, an independent and community-driven open database for barcoded food products."</string>
 </resources>

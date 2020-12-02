@@ -30,4 +30,5 @@
     <string name="scanner_search_action">"Ricerca"</string>
     <string name="scanner_scan_action">"Scansionare codici a barre"</string>
     <string name="scanner_clear_action">"Cancellare"</string>
+    <string name="about_us_message">"Questa applicazione consente di scansionare il codice a barre di un prodotto e recuperare alcuni dettagli come valori nutrizionali, ingredienti e immagini del prodotto. La fonte dei dati di FoodScanner è il servizio Open Food Repo, un database aperto indipendente e gestito dalla comunità per i prodotti alimentari con codice a barre."</string>
 </resources>

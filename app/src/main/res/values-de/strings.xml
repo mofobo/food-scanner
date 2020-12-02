@@ -30,4 +30,5 @@
     <string name="scanner_search_action">"Suchen"</string>
     <string name="scanner_scan_action">"Barcode scannen"</string>
     <string name="scanner_clear_action">"Löschen"</string>
+    <string name="about_us_message">"Mit dieser Anwendung können Sie den Barcode eines Produkts scannen und einige Details wie Nährwerte, Zutaten und Produktbilder abrufen. Die Datenquelle von FoodScanner ist der Open Food Repo-Dienst, eine unabhängige und von der Community betriebene offene Datenbank für Barcode-Lebensmittel."</string>
 </resources>
