@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/product_not_found"
+        android:text="@string/details_not_found_title"
         android:textSize="36dp"
         app:layout_constraintBottom_toTopOf="@id/animation"
         app:layout_constraintEnd_toEndOf="parent"

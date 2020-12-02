@@ -77,7 +77,7 @@ class DetailsFragment : DialogFragment() {
     private fun prepareView() {
 
         toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
-        toolbar.title = requireContext().getString(R.string.global_result)
+        toolbar.title = requireContext().getString(R.string.details_toolbar_title)
 
         fadeTransition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.fade_out_in_together)
         sceneLoading = Scene.getSceneForLayout(scene_container, LAYOUT_SCENE_LOADING_ID, requireContext())
@@ -168,7 +168,7 @@ class DetailsFragment : DialogFragment() {
     private fun displayProduct(product: Product) {
         product.let {
 
-            name_tv.text = it.name_translations.getAnyTranslation(Lang.valueOf(requireContext().getString(R.string.lang)), it.barcode)
+            name_tv.text = it.name_translations.getAnyTranslation(Lang.valueOf(requireContext().getString(R.string.enum_lang)), it.barcode)
 
             imageGalleryAdapter.setData(it.getImages("large"))
 
@@ -177,7 +177,7 @@ class DetailsFragment : DialogFragment() {
     }
 
     private fun displayNutrients(product: Product) {
-        var htmlTemplate = requireContext().getString(R.string.nutrients_table_html)
+        var htmlTemplate = requireContext().getString(R.string.details_nutrients_table_html)
         val nutrients = product.nutrients
         val nutrientInfosHTML = mutableListOf<String>()
         val vitaminsInfosHTML = mutableListOf<String>()

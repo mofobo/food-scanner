@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
@@ -31,6 +32,8 @@ class ScannerFragment : Fragment() {
 
     private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var infoPopUpMenu: PopupMenu
+
     val mainActivity: MainActivity
         get() = requireActivity() as MainActivity
 
@@ -51,6 +54,17 @@ class ScannerFragment : Fragment() {
     }
 
     private fun prepareView() {
+
+        infoPopUpMenu = PopupMenu(requireActivity(), info)
+        infoPopUpMenu.menuInflater.inflate(R.menu.fragment_scanner_settings_menu, infoPopUpMenu.menu)
+
+        infoPopUpMenu.setOnMenuItemClickListener {
+            Toast.makeText(requireActivity(), "You Clicked : ${it.title}", Toast.LENGTH_SHORT).show()
+            return@setOnMenuItemClickListener true
+        }
+
+        info.setOnClickListener { infoPopUpMenu.show() }
+
         clear_btn.isEnabled = sharedViewModel.barcode.length != 0
         search_btn.isEnabled = sharedViewModel.barcode.length != 0
 

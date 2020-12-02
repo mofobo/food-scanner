@@ -79,6 +79,7 @@ workflows:
           inputs:
             - build_type: aab
             - variant: prdRelease
+      - sign-apk@1: {}
       - google-play-deploy@3:
           inputs:
             - package_name: ch.mofobo.foodscanner
