@@ -62,13 +62,15 @@ class HistoryFragment : Fragment() {
         val swipeToDeleteHelperCallBack = object : SwipeToDeleteHelperCallBack(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                val product =(viewHolder as ProductViewHolder).product
-                val position =(viewHolder as ProductViewHolder).pos
+                val product = (viewHolder as ProductViewHolder).product
+                val position = viewHolder.pos
                 viewModel.removeProduct(product)
 
-                Snackbar.make(viewHolder.itemView, "${product.display_name_translations.getTranslation(Lang.GERMAN,"")} removed", Snackbar.LENGTH_LONG).setAction("UNDO") {
-                    product.let {
-                        viewModel.addProduct(it, position)
+                Snackbar.make(viewHolder.itemView, "${product.display_name_translations.getTranslation(Lang.GERMAN, "")} removed", Snackbar.LENGTH_LONG).setAction("UNDO") {
+                    product.let { prod ->
+                        viewModel.products.value?.let {
+                            viewModel.addProduct(prod, it.size - position)
+                        }
                     }
                 }.show()
             }
