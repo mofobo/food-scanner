@@ -1,18 +1,12 @@
-package ch.mofobo.foodscanner.data.product.locale
+package ch.mofobo.foodscanner.data.settings.locale
 
-import ch.mofobo.foodscanner.domain.model.Product
+import java.util.*
 
-interface LocaleProductDataSource {
+interface LocaleSettingsDataSource {
 
-    suspend fun add(product: Product)
+    fun setLocale(locale: Locale)
 
-    suspend fun add(product: Product, position: Int)
+    fun getLocale(): Locale?
 
-    suspend fun get(id: Long?, barcode: String?): Product?
-
-    suspend fun getAll(): List<Product>
-
-    suspend fun remove(product: Product)
-
-    suspend fun removeAll()
+    fun removeLocale()
 }
