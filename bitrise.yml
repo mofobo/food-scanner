@@ -79,7 +79,11 @@ workflows:
           inputs:
             - build_type: aab
             - variant: prdRelease
-      - sign-apk@1: {}
+      - sign-apk@1:
+          inputs:
+            - android_app: |-
+                $BITRISE_AAB_PATH
+                $BITRISE_APK_PATH
       - google-play-deploy@3:
           inputs:
             - package_name: ch.mofobo.foodscanner
