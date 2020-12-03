@@ -25,7 +25,7 @@
         android:id="@+id/input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/or_label"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/info"
@@ -36,7 +36,7 @@
             android:id="@+id/barcode_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/global_enter_barcode"
+            android:hint="@string/scanner_search_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -57,7 +57,7 @@
             android:layout_marginEnd="8dp"
             android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
             android:inputType="text"
-            android:text="Clear"
+            android:text="@string/scanner_clear_action"
             app:layout_constraintEnd_toStartOf="@id/search_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/barcode_input_layout" />
@@ -69,7 +69,7 @@
             android:layout_marginStart="8dp"
             android:drawableLeft="@android:drawable/ic_menu_search"
             android:inputType="text"
-            android:text="Search"
+            android:text="@string/scanner_search_action"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/clear_btn"
             app:layout_constraintTop_toBottomOf="@id/barcode_input_layout" />
@@ -77,11 +77,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <TextView
-        android:id="@+id/or_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="or"
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_700"
         app:layout_constraintBottom_toTopOf="@id/scan_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,13 +92,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawableLeft="@drawable/ic_scanner_scan_action"
         android:inputType="text"
-        android:text="Scan barcode"
+        android:text="@string/scanner_scan_action"
         app:layout_constraintBottom_toTopOf="@id/version"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/or_label" />
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <TextView
         android:id="@+id/version"

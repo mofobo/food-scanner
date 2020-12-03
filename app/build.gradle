@@ -14,32 +14,32 @@ android {
 
         minSdkVersion rootProject.ext.min_sdk_version
         targetSdkVersion rootProject.ext.target_sdk_version
-        versionName "1.2.1"
+        versionName "1.3.1"
         versionCode 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        debug {
-            storeFile file("key/debug.keystore")
-            storePassword '2rswRYtGL6/='
-            keyAlias 'foodscanner_debug_key'
-            keyPassword '(49tYGW$eiU,'
-        }
-        release {
-            storeFile file("key/release.keystore")
-            storePassword 'EZTQudGoC+</'
-            keyAlias 'foodscanner_release_key'
-            keyPassword 'UJ]7p8KEF9|:'
-        }
-    }
+//    signingConfigs {
+//        debug {
+//            storeFile file("key/debug.keystore")
+//            storePassword '2rswRYtGL6/='
+//            keyAlias 'foodscanner_debug_key'
+//            keyPassword '(49tYGW$eiU,'
+//        }
+//        release {
+//            storeFile file("key/release.keystore")
+//            storePassword 'EZTQudGoC+</'
+//            keyAlias 'foodscanner_release_key'
+//            keyPassword 'UJ]7p8KEF9|:'
+//        }
+//    }
 
     buildTypes {
         debug {
             debuggable true
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            //signingConfig signingConfigs.debug
         }
 
         release {
@@ -47,7 +47,7 @@ android {
             shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
     }
 
