@@ -1,4 +1,4 @@
-package ch.mofobo.foodscanner.data.remote
+package ch.mofobo.foodscanner.data.product.remote
 
 import ch.mofobo.foodscanner.domain.exception.BaseException
 import ch.mofobo.foodscanner.domain.model.Product

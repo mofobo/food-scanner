@@ -17,13 +17,6 @@
             app:exitAnim="@anim/nav_default_pop_exit_anim"
             app:popEnterAnim="@animator/nav_default_pop_enter_anim"
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_navigation_scanner_to_about"
-            app:destination="@id/navigation_about"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim"
-            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -55,9 +48,18 @@
     <action
         android:id="@+id/action_navigation_to_details"
         app:destination="@id/navigation_details"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_close_exit"
+        app:popEnterAnim="@anim/fragment_open_enter"
+        app:popExitAnim="@anim/fragment_close_exit"/>
 
-        app:popUpTo="@+id/navigation_camera"
-        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_navigation_to_about"
+        app:destination="@id/navigation_about"
+        app:enterAnim="@anim/fragment_open_enter"
+        app:exitAnim="@anim/fragment_close_exit"
+        app:popEnterAnim="@anim/fragment_open_enter"
+        app:popExitAnim="@anim/fragment_close_exit"/>
 
     <dialog
         android:id="@+id/navigation_about"

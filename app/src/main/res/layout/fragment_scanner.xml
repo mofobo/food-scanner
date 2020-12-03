@@ -12,15 +12,6 @@
     app:layout_behavior="@string/nav_app_bar_navigate_up_description"
     tools:context="ch.mofobo.foodscanner.features.scanner.ScannerFragment">
 
-    <ImageView
-        android:id="@+id/info"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ic_gear_grey"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/input_container"
         android:layout_width="match_parent"
@@ -28,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/info"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread">
 
 

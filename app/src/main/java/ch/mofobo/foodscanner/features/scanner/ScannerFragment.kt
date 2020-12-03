@@ -1,6 +1,7 @@
 package ch.mofobo.foodscanner.features.scanner
 
-import android.content.pm.PackageInfo
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
@@ -16,27 +17,23 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import ch.mofobo.foodscanner.BuildConfig
 import ch.mofobo.foodscanner.MainActivity
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.common.SharedViewModel
 import com.google.android.gms.ads.AdRequest
-import kotlinx.android.synthetic.main.fragment_about.*
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 class ScannerFragment : Fragment() {
 
-    private lateinit var navController: NavController
-
-    private val viewModel: ScannerViewModel by viewModel()
-
+    //private val sharedViewModel: SharedViewModel by viewModel()
     private lateinit var sharedViewModel: SharedViewModel
 
-    private lateinit var infoPopUpMenu: PopupMenu
+    private lateinit var navController: NavController
 
-    val mainActivity: MainActivity
+    private val mainActivity: MainActivity
         get() = requireActivity() as MainActivity
 
 
@@ -56,17 +53,6 @@ class ScannerFragment : Fragment() {
     }
 
     private fun prepareView() {
-
-        infoPopUpMenu = PopupMenu(requireActivity(), info)
-        infoPopUpMenu.menuInflater.inflate(R.menu.fragment_scanner_settings_menu, infoPopUpMenu.menu)
-
-        infoPopUpMenu.setOnMenuItemClickListener {
-            navigateToAbout()
-            return@setOnMenuItemClickListener true
-        }
-
-        info.setOnClickListener { infoPopUpMenu.show() }
-
         clear_btn.isEnabled = sharedViewModel.barcode.length != 0
         search_btn.isEnabled = sharedViewModel.barcode.length != 0
 
@@ -92,39 +78,16 @@ class ScannerFragment : Fragment() {
 
         scan_btn.isEnabled = hasCameraHardware()
         scan_btn.setOnClickListener {
-            if (mainActivity.cameraPermissionManager.needCameraPermissions()) {
-                mainActivity.cameraPermissionManager.requestCameraPermissions()
-            } else {
-                navigateToCamera()
-            }
+            checkPermissionAndNavigateToCamera()
         }
     }
 
-    private fun preparePopUpWindows() {
-//        val li = LayoutInflater.from(context)
-//        val view: View = li.inflate(R.layout.congratulations_dialog, null)
-//
-//        val alertDialogBuilder: AlertDialog.Builder = Builder(context, R.style.AlertDialogStyle)
-//        alertDialogBuilder.setView(view)
-//
-//        val image1: ImageView = view.findViewById(R.id.image1)
-//        val txtSuccess = view.findViewById<TextView>(R.id.txtSuccess)
-//        val btnCancle: ImageView = view.findViewById(R.id.btnCancle)
-//        val btnContinue: Button = view.findViewById(R.id.btnContinue)
-//
-//        txtSuccess.text = "string"
-//        btnContinue.setText("string")
-//
-//        btnCancle.setOnClickListener(View.OnClickListener {
-//            // TODO: 7/5/18 your click listener
-//        })
-//        btnContinue.setOnClickListener(View.OnClickListener {
-//            // TODO: 7/5/18 your click listener
-//        })
-//
-//        alertDialogCongratulations = alertDialogBuilder.create()
-//        alertDialogCongratulations.show()
-//        alertDialogCongratulations.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+    private fun checkPermissionAndNavigateToCamera() {
+        if (mainActivity.cameraPermissionManager.needCameraPermissions()) {
+            mainActivity.cameraPermissionManager.requestCameraPermissions()
+        } else {
+            navigateToCamera()
+        }
     }
 
     private fun prepareAds() {
@@ -140,10 +103,6 @@ class ScannerFragment : Fragment() {
     private fun navigateToProductDetails() {
         navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
         resetBarcodeManualInput()
-    }
-
-    private fun navigateToAbout() {
-        navController.navigate(ScannerFragmentDirections.actionNavigationScannerToAbout())
     }
 
     /** Check if this device has a camera */

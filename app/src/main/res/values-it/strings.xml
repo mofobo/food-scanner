@@ -37,4 +37,10 @@ La fonte dei dati di FoodScanner è il servizio Open Food Repo, un database aper
     <string name="history_empty_message">"Attualmente vuoto !
 
 Ma non appena trovi un prodotto, verrà visualizzato nella cronologia delle ricerche e potrai accedervi più velocemente e offline."</string>
+
+    <!-- Fuzzy -->
+    <string name="settings_i18n_title">"Scegli la lingua"</string>
+
+    <!-- Fuzzy -->
+    <string name="settings_menu_item_language">"Linguaggio"</string>
 </resources>
