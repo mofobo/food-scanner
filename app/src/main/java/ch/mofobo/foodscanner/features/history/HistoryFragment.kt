@@ -45,10 +45,6 @@ class HistoryFragment : Fragment() {
         viewModel.getProducts()
     }
 
-    private fun navigateTo(destination: Int) {
-        navController.navigate(destination)
-    }
-
     private fun prepareView() {
         prepareAdapter()
     }
@@ -61,18 +57,7 @@ class HistoryFragment : Fragment() {
 
         val swipeToDeleteHelperCallBack = object : SwipeToDeleteHelperCallBack(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
-                val product = (viewHolder as ProductViewHolder).product
-                val position = viewHolder.pos
-                viewModel.removeProduct(product)
-
-                Snackbar.make(viewHolder.itemView, "${product.display_name_translations.getTranslation(Lang.GERMAN, "")} removed", Snackbar.LENGTH_LONG).setAction("UNDO") {
-                    product.let { prod ->
-                        viewModel.products.value?.let {
-                            viewModel.addProduct(prod, it.size - position)
-                        }
-                    }
-                }.show()
+                removeProduct(viewHolder)
             }
         }
 
@@ -80,10 +65,29 @@ class HistoryFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(products_rv)
     }
 
+    private fun removeProduct(viewHolder: RecyclerView.ViewHolder) {
+        val product = (viewHolder as ProductViewHolder).product
+        val position = viewHolder.pos
+        viewModel.removeProduct(product)
+
+        Snackbar.make(viewHolder.itemView, "${product.display_name_translations.getTranslation(Lang.GERMAN, "")} removed", Snackbar.LENGTH_LONG).setAction("UNDO") {
+            product.let { prod ->
+                viewModel.products.value?.let {
+                    viewModel.addProduct(prod, it.size - position)
+                }
+            }
+        }.show()
+    }
+
     private fun observeViewModel() {
         viewModel.products.observe(viewLifecycleOwner, Observer {
+            setEmptyMessageVisibility(it.isNullOrEmpty())
             productListAdapter.setData(it)
         })
+    }
+
+    private fun setEmptyMessageVisibility(isVisibile: Boolean) {
+        empty_message.visibility = if (isVisibile) View.VISIBLE else View.GONE
     }
 
     companion object {

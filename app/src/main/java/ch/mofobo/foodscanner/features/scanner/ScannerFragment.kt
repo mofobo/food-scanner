@@ -21,6 +21,7 @@ import ch.mofobo.foodscanner.MainActivity
 import ch.mofobo.foodscanner.R
 import ch.mofobo.foodscanner.features.common.SharedViewModel
 import com.google.android.gms.ads.AdRequest
+import kotlinx.android.synthetic.main.fragment_about.*
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -60,7 +61,7 @@ class ScannerFragment : Fragment() {
         infoPopUpMenu.menuInflater.inflate(R.menu.fragment_scanner_settings_menu, infoPopUpMenu.menu)
 
         infoPopUpMenu.setOnMenuItemClickListener {
-            Toast.makeText(requireActivity(), "You Clicked : ${it.title}", Toast.LENGTH_SHORT).show()
+            navigateToAbout()
             return@setOnMenuItemClickListener true
         }
 
@@ -71,8 +72,7 @@ class ScannerFragment : Fragment() {
 
         clear_btn.setOnClickListener { resetBarcodeManualInput() }
         search_btn.setOnClickListener {
-            navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
-            resetBarcodeManualInput()
+            navigateToProductDetails()
         }
 
         barcode_manual_input.setText(sharedViewModel.barcode)
@@ -98,8 +98,33 @@ class ScannerFragment : Fragment() {
                 navigateToCamera()
             }
         }
+    }
 
-        setVersion()
+    private fun preparePopUpWindows() {
+//        val li = LayoutInflater.from(context)
+//        val view: View = li.inflate(R.layout.congratulations_dialog, null)
+//
+//        val alertDialogBuilder: AlertDialog.Builder = Builder(context, R.style.AlertDialogStyle)
+//        alertDialogBuilder.setView(view)
+//
+//        val image1: ImageView = view.findViewById(R.id.image1)
+//        val txtSuccess = view.findViewById<TextView>(R.id.txtSuccess)
+//        val btnCancle: ImageView = view.findViewById(R.id.btnCancle)
+//        val btnContinue: Button = view.findViewById(R.id.btnContinue)
+//
+//        txtSuccess.text = "string"
+//        btnContinue.setText("string")
+//
+//        btnCancle.setOnClickListener(View.OnClickListener {
+//            // TODO: 7/5/18 your click listener
+//        })
+//        btnContinue.setOnClickListener(View.OnClickListener {
+//            // TODO: 7/5/18 your click listener
+//        })
+//
+//        alertDialogCongratulations = alertDialogBuilder.create()
+//        alertDialogCongratulations.show()
+//        alertDialogCongratulations.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
     }
 
     private fun prepareAds() {
@@ -107,23 +132,18 @@ class ScannerFragment : Fragment() {
         adView.loadAd(adRequest)
     }
 
-    private fun setVersion() {
-        val packageInfo: PackageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-
-        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            packageInfo.longVersionCode
-        } else {
-            packageInfo.versionCode
-        }
-
-        val environment = BuildConfig.ENVIRONMENT
-
-        version.text = "v. ${packageInfo.versionName} ($versionCode)${if (environment.isNullOrBlank()) "" else " - $environment"}"
-    }
-
     private fun navigateToCamera() {
         navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
         resetBarcodeManualInput()
+    }
+
+    private fun navigateToProductDetails() {
+        navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
+        resetBarcodeManualInput()
+    }
+
+    private fun navigateToAbout() {
+        navController.navigate(ScannerFragmentDirections.actionNavigationScannerToAbout())
     }
 
     /** Check if this device has a camera */

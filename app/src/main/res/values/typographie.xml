@@ -12,7 +12,7 @@
 
 
     <style name="Ketchup.Title" parent="Ketchup">
-        <item name="android:textSize">54sp</item>
+        <item name="android:textSize">48sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 

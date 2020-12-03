@@ -17,6 +17,13 @@
             app:exitAnim="@anim/nav_default_pop_exit_anim"
             app:popEnterAnim="@animator/nav_default_pop_enter_anim"
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_navigation_scanner_to_about"
+            app:destination="@id/navigation_about"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -45,13 +52,17 @@
             app:nullable="true" />
     </dialog>
 
-
     <action
         android:id="@+id/action_navigation_to_details"
         app:destination="@id/navigation_details"
 
         app:popUpTo="@+id/navigation_camera"
         app:popUpToInclusive="true" />
-    />
+
+    <dialog
+        android:id="@+id/navigation_about"
+        android:name="ch.mofobo.foodscanner.features.about.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
 
 </navigation>

@@ -21,6 +21,11 @@ android {
 
         buildConfigField "String", "FOODREPO_BASE_URL", '"https://www.foodrepo.org/api/v3/"'
         buildConfigField "String", "FOODREPO_API_KEY", '"ce074d72db16f2927095a70a09c37f37"'
+
+        buildConfigField "String", "FOODSCANNER_GITHUB_URL", '"https://github.com/mofobo/food-scanner"'
+        buildConfigField "String", "LINKEDIN_MOFOBO_URL", '"https://www.linkedin.com/in/mofobo"'
+        buildConfigField "String", "GOOGLE_PLAY_APP_PAGE_URL", '"https://play.google.com/store/apps/details?id=ch.mofobo.foodscanner"'
+        buildConfigField "String", "DEVELOPER_EMAIL", '"mohammed.fonseca@gmail.com"'
     }
 
     buildTypes {
