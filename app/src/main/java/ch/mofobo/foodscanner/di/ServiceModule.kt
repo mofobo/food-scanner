@@ -3,7 +3,7 @@ package ch.mofobo.foodscanner.di
 import android.content.Context
 import android.text.TextUtils
 import ch.mofobo.foodscanner.BuildConfig
-import ch.mofobo.foodscanner.data.remote.RemoteProductService
+import ch.mofobo.foodscanner.data.product.remote.RemoteProductService
 import ch.mofobo.foodscanner.utils.FoodRepoAuthenticationInterceptor
 import ch.mofobo.foodscanner.utils.NetworkHelper
 import okhttp3.Interceptor

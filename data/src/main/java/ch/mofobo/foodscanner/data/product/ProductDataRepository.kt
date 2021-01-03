@@ -1,7 +1,7 @@
-package ch.mofobo.foodscanner.data
+package ch.mofobo.foodscanner.data.product
 
-import ch.mofobo.foodscanner.data.locale.LocaleProductDataSource
-import ch.mofobo.foodscanner.data.remote.RemoteProductDataSource
+import ch.mofobo.foodscanner.data.product.locale.LocaleProductDataSource
+import ch.mofobo.foodscanner.data.product.remote.RemoteProductDataSource
 import ch.mofobo.foodscanner.domain.model.Product
 import ch.mofobo.foodscanner.domain.repository.ProductRepository
 

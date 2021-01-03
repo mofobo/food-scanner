@@ -1,6 +1,7 @@
 package ch.mofobo.foodscanner.features.scanner
 
-import android.content.pm.PackageInfo
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
@@ -22,19 +23,17 @@ import ch.mofobo.foodscanner.features.common.SharedViewModel
 import com.google.android.gms.ads.AdRequest
 import kotlinx.android.synthetic.main.fragment_scanner.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 class ScannerFragment : Fragment() {
 
-    private lateinit var navController: NavController
-
-    private val viewModel: ScannerViewModel by viewModel()
-
+    //private val sharedViewModel: SharedViewModel by viewModel()
     private lateinit var sharedViewModel: SharedViewModel
 
-    private lateinit var infoPopUpMenu: PopupMenu
+    private lateinit var navController: NavController
 
-    val mainActivity: MainActivity
+    private val mainActivity: MainActivity
         get() = requireActivity() as MainActivity
 
 
@@ -54,24 +53,12 @@ class ScannerFragment : Fragment() {
     }
 
     private fun prepareView() {
-
-        infoPopUpMenu = PopupMenu(requireActivity(), info)
-        infoPopUpMenu.menuInflater.inflate(R.menu.fragment_scanner_settings_menu, infoPopUpMenu.menu)
-
-        infoPopUpMenu.setOnMenuItemClickListener {
-            Toast.makeText(requireActivity(), "You Clicked : ${it.title}", Toast.LENGTH_SHORT).show()
-            return@setOnMenuItemClickListener true
-        }
-
-        info.setOnClickListener { infoPopUpMenu.show() }
-
         clear_btn.isEnabled = sharedViewModel.barcode.length != 0
         search_btn.isEnabled = sharedViewModel.barcode.length != 0
 
         clear_btn.setOnClickListener { resetBarcodeManualInput() }
         search_btn.setOnClickListener {
-            navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
-            resetBarcodeManualInput()
+            navigateToProductDetails()
         }
 
         barcode_manual_input.setText(sharedViewModel.barcode)
@@ -91,14 +78,16 @@ class ScannerFragment : Fragment() {
 
         scan_btn.isEnabled = hasCameraHardware()
         scan_btn.setOnClickListener {
-            if (mainActivity.cameraPermissionManager.needCameraPermissions()) {
-                mainActivity.cameraPermissionManager.requestCameraPermissions()
-            } else {
-                navigateToCamera()
-            }
+            checkPermissionAndNavigateToCamera()
         }
+    }
 
-        setVersion()
+    private fun checkPermissionAndNavigateToCamera() {
+        if (mainActivity.cameraPermissionManager.needCameraPermissions()) {
+            mainActivity.cameraPermissionManager.requestCameraPermissions()
+        } else {
+            navigateToCamera()
+        }
     }
 
     private fun prepareAds() {
@@ -106,19 +95,13 @@ class ScannerFragment : Fragment() {
         adView.loadAd(adRequest)
     }
 
-    private fun setVersion() {
-        val packageInfo: PackageInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            packageInfo.longVersionCode
-        } else {
-            packageInfo.versionCode
-        }
-        val versionName = packageInfo.versionName
-        version.text = "v. $versionName ($versionCode)"
-    }
-
     private fun navigateToCamera() {
         navController.navigate(ScannerFragmentDirections.actionNavigationScannerToCamera())
+        resetBarcodeManualInput()
+    }
+
+    private fun navigateToProductDetails() {
+        navController.navigate(ScannerFragmentDirections.actionNavigationToDetails(-1, sharedViewModel.barcode))
         resetBarcodeManualInput()
     }
 

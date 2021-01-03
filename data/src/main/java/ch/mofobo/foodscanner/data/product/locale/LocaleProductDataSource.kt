@@ -1,4 +1,4 @@
-package ch.mofobo.foodscanner.data.locale
+package ch.mofobo.foodscanner.data.product.locale
 
 import ch.mofobo.foodscanner.domain.model.Product
 

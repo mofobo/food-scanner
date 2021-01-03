@@ -1,5 +1,7 @@
 package ch.mofobo.foodscanner.di
 
+import ch.mofobo.foodscanner.features.about.AboutViewModel
+import ch.mofobo.foodscanner.features.common.SharedViewModel
 import ch.mofobo.foodscanner.features.details.DetailsViewModel
 import ch.mofobo.foodscanner.features.history.HistoryViewModel
 import ch.mofobo.foodscanner.features.scanner.ScannerViewModel
@@ -14,5 +16,6 @@ val viewModelModule =
 
         viewModel { CameraViewModel() }
         viewModel { DetailsViewModel(get(), get()) }
+        viewModel { AboutViewModel() }
 
     }
