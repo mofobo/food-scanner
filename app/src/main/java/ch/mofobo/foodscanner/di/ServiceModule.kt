@@ -39,18 +39,16 @@ private fun provideRetrofit(
         .client(okHttpClient)
         .build()
 
-private fun provideOkHttpClient() {
+private fun provideOkHttpClient(): OkHttpClient {
     val loggingInterceptor = HttpLoggingInterceptor()
     val foodRepoAuthenticationInterceptor = FoodRepoAuthenticationInterceptor()
 
-    val timeoutInterceptor = TimeoutInterceptor()
-
     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-    OkHttpClient.Builder()
+    return OkHttpClient.Builder()
         .connectTimeout(10000, TimeUnit.MILLISECONDS)
         .writeTimeout(15000, TimeUnit.MILLISECONDS)
         .readTimeout(5000, TimeUnit.MILLISECONDS)
-        .addInterceptor(timeoutInterceptor)
+        .addInterceptor(TimeoutInterceptor())
         .addInterceptor(foodRepoAuthenticationInterceptor)
         .addInterceptor(loggingInterceptor)
         .build()

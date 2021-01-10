@@ -23,7 +23,7 @@ class ProductViewHolder(itemView: View, private val itemClickConsumer: Consumer<
         this.pos=position
         this.product.images.firstOrNull()?.let { images -> itemView.thumb.let { imageView -> imageView.loadUrl(images.thumb) } }
 
-        itemView.name.text = this.product.display_name_translations.getTranslation(Lang.ENGLISCH, this.product.barcode)
+        itemView.name.text = this.product.display_name_translations.getTranslation(Lang.ENGLISH, this.product.barcode)
 
         itemView.setOnClickListener { itemClickConsumer.accept(this.product) }
     }

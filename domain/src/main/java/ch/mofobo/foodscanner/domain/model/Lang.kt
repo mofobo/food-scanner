@@ -2,7 +2,7 @@ package ch.mofobo.foodscanner.domain.model
 
 enum class Lang {
     FRENCH,
-    ENGLISCH,
+    ENGLISH,
     GERMAN,
     ITALIAN
 }
