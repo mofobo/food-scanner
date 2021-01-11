@@ -19,7 +19,7 @@
     <string name="details_not_found_title">"Product not found"</string>
 
     <!-- Fuzzy -->
-    <string name="enum_lang">"ENGLISCH"</string>
+    <string name="enum_lang">"ENGLISH"</string>
     <string name="exception_no_internet">"No Internet! Check your connection."</string>
 
     <!-- Fuzzy -->

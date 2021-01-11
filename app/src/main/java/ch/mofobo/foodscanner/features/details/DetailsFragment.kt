@@ -56,6 +56,9 @@ class DetailsFragment : DialogFragment() {
     private val animateSceneTransition: Boolean
         get() = currentScene != null
 
+    private val lang: Lang
+        get() = Lang.valueOf(requireContext().getString(R.string.enum_lang))
+
     private lateinit var fadeTransition: Transition
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -189,7 +192,7 @@ class DetailsFragment : DialogFragment() {
 
             if (nutrient == null) return false
 
-            val name = nutrient.nameTranslations.getTranslation(DEFAULT_LANG, defaultName)
+            val name = nutrient.nameTranslations.getTranslation(lang, defaultName)
             val perHundred = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perHundred, " ${nutrient.unit}", "")
             val perPortion = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perPortion, " ${nutrient.unit}", "")
             val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient.perDay, "", "")
@@ -205,13 +208,13 @@ class DetailsFragment : DialogFragment() {
             var nutrient2Str: String? = null
 
             if (nutrient1 != null) {
-                val name = nutrient1.nameTranslations.getTranslation(DEFAULT_LANG, defaultName)
+                val name = nutrient1.nameTranslations.getTranslation(lang, defaultName)
                 val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient1.perDay, "", "")
                 nutrient1Str = "$name $perDay%"
             }
 
             if (nutrient2 != null) {
-                val name = nutrient2.nameTranslations.getTranslation(DEFAULT_LANG, defaultName)
+                val name = nutrient2.nameTranslations.getTranslation(lang, defaultName)
                 val perDay = StringUtils.trimTrailingZeroAndAddSuffix(nutrient2.perDay, "", "")
                 nutrient2Str = "$name $perDay%"
             }
@@ -244,6 +247,7 @@ class DetailsFragment : DialogFragment() {
         formatNutrientLine(nutrients.lactose, "")
         formatNutrientLine(nutrients.polyols, "")
         formatNutrientLine(nutrients.protein, "")
+        
         formatVitamineLine(nutrients.biotin, nutrients.calcium, "")
         formatVitamineLine(nutrients.folicAcid, nutrients.iron, "")
         formatVitamineLine(nutrients.magnesium, nutrients.omega_3_fatty_acids, "")
@@ -301,7 +305,7 @@ class DetailsFragment : DialogFragment() {
             "<tr><td class=\"blank-cell\"></td><th>%1s</th><td style=\"text-align:right\"><b>%2s</b></td><td style=\"text-align:right\"><b>%3s</b></td><td style=\"text-align:right\"><b>%4s</b></td></tr>"
         private const val VITAMINE_HTML_TEMPLATE = "<tr><td colspan=\"2\"> • %1s</td><td> • %2s</td></tr>"
 
-        private val DEFAULT_LANG = Lang.ENGLISCH
+        private val DEFAULT_LANG = Lang.ENGLISH
 
         @LayoutRes
         private const val LAYOUT_ID = R.layout.fragment_details

@@ -8,16 +8,16 @@ data class Translations(
     @field:Json(name = "fr")
     val french: String?,
     @field:Json(name = "it")
-    val italien: String?,
+    val italian: String?,
     @field:Json(name = "en")
-    val englisch: String?
+    val english: String?
 ) {
     fun getTranslation(lang: Lang, defaultValue: String): String {
         return when (lang) {
-            Lang.ENGLISCH -> englisch
+            Lang.ENGLISH -> english
             Lang.FRENCH -> french
             Lang.GERMAN -> german
-            Lang.ITALIAN -> italien
+            Lang.ITALIAN -> italian
         } ?: defaultValue
     }
 
@@ -40,10 +40,10 @@ data class Translations(
 
     private fun getTranslation(lang: Lang): String? {
         return when (lang) {
-            Lang.ENGLISCH -> englisch
+            Lang.ENGLISH -> english
             Lang.FRENCH -> french
             Lang.GERMAN -> german
-            Lang.ITALIAN -> italien
+            Lang.ITALIAN -> italian
         }
     }
 }
